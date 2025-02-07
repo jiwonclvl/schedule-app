@@ -1,5 +1,6 @@
 package com.example.scheduleapp.dto.response;
 
+import com.example.scheduleapp.entity.Schedule;
 import lombok.Getter;
 
 @Getter
@@ -25,4 +26,16 @@ public class ScheduleResponseDto {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    public static  ScheduleResponseDto ScheduleDto(Schedule schedule) {
+        return new ScheduleResponseDto(
+                schedule.getId(),
+                schedule.getMember().getUsername(),
+                schedule.getTitle(),
+                schedule.getContents(),
+                schedule.getCreatedAt().toString(),
+                schedule.getUpdatedAt().toString()
+        );
+    }
+
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -42,6 +43,14 @@ public class ScheduleServiceImpl implements ScheduleService {
                 localDateTimeFormat(saveSchedule.getCreatedAt()),
                 localDateTimeFormat(saveSchedule.getUpdatedAt())
         );
+    }
+
+    @Override
+    public List<ScheduleResponseDto> getSchedules() {
+        return scheduleRepository.findAll()
+                .stream()
+                .map(ScheduleResponseDto::ScheduleDto)
+                .toList();
     }
 
     private String localDateTimeFormat(LocalDateTime dateTime) {
