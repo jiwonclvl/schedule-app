@@ -2,7 +2,6 @@ package com.example.scheduleapp.service;
 
 
 import com.example.scheduleapp.dto.MemberResponseDto;
-import com.example.scheduleapp.entity.Member;
 
 public interface MemberService {
 
