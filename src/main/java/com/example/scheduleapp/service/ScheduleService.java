@@ -16,5 +16,8 @@ public interface ScheduleService {
     //일정 단건 가져오기
     public ScheduleResponseDto getSchedule(Long getSchedule);
 
+    //일정 수정하기
+    public ScheduleResponseDto updateSchedule(Long scheduleId, String title, String contents);
+
 
 }

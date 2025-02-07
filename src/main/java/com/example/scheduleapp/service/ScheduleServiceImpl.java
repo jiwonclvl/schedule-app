@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -64,8 +65,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleResponseDto getSchedule(Long getSchedule) {
-        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(getSchedule);
+    public ScheduleResponseDto getSchedule(Long ScheduleId) {
+        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(ScheduleId);
 
         log.info("일정 단건 조회 성공");
 
@@ -78,6 +79,46 @@ public class ScheduleServiceImpl implements ScheduleService {
                 localDateTimeFormat(findschedule.getUpdatedAt())
         );
     }
+
+    @Override
+    @Transactional
+    public ScheduleResponseDto updateSchedule(Long scheduleId, String title, String contents) {
+        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(scheduleId);
+
+        /* todo: 예외처리 추가하기
+        //둘 다 비어 있는 경우 기존 값 유지
+        if(!StringUtils.hasText(title) && !StringUtils.hasText(contents)) {
+
+        }
+        //title만 있는 경우
+        if(!StringUtils.hasText(title) && !StringUtils.hasText(contents)) {
+
+        }
+        //contents만 있는 경우
+        if(!StringUtils.hasText(title) && !StringUtils.hasText(contents)) {
+
+        } */
+
+        //todo: 여러 사용자의 일정이 등록되어 있는 경우 다른 사용자의 수정을 하려고 하면 예외 처리해야함
+
+        findschedule.updateTitle(title);
+        findschedule.updateContents(contents);
+
+        System.out.println("findschedule.getTitle() = " + findschedule.getTitle());
+        System.out.println("findschedule.getContent() = " + findschedule.getContents());
+
+        log.info("일정 수정 조회 성공");
+
+        return new ScheduleResponseDto(
+                findschedule.getId(),
+                findschedule.getMember().getUsername(),
+                findschedule.getTitle(),
+                findschedule.getContents(),
+                localDateTimeFormat(findschedule.getCreatedAt()),
+                localDateTimeFormat(findschedule.getUpdatedAt())
+        );
+    }
+
 
     private String localDateTimeFormat(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

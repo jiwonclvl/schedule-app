@@ -1,6 +1,7 @@
 package com.example.scheduleapp.controller;
 
 import com.example.scheduleapp.dto.request.ScheduleRequestDto;
+import com.example.scheduleapp.dto.request.UpdateScheduleRequestDto;
 import com.example.scheduleapp.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.service.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,6 +50,17 @@ public class ScheduleController {
 
         return new ResponseEntity<>(scheduleService.getSchedule(scheduleId), HttpStatus.OK);
     }
+
+    //일정 수정
+    @PatchMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long scheduleId,
+            @RequestBody UpdateScheduleRequestDto dto
+    ) {
+        log.info("일정 수정 API 호출");
+        return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, dto.getTitle(), dto.getContents()), HttpStatus.OK);
+    }
+
 
     private Long getHttpSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
