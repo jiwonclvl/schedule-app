@@ -7,8 +7,10 @@ import com.example.scheduleapp.repository.MemberRepository;
 import com.example.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,10 +49,16 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<ScheduleResponseDto> getSchedules() {
-        return scheduleRepository.findAll()
+        List<ScheduleResponseDto> scheduleList = scheduleRepository.findAll()
                 .stream()
                 .map(ScheduleResponseDto::ScheduleDto)
                 .toList();
+
+        if(scheduleList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다.");
+        }
+
+        return scheduleList;
     }
 
     private String localDateTimeFormat(LocalDateTime dateTime) {
