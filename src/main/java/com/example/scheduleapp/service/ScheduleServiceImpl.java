@@ -119,6 +119,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
+    @Override
+    @Transactional
+    public void deleteSchedule(Long ScheduleId) {
+        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(ScheduleId);
+        scheduleRepository.delete(findschedule);
+
+        log.info("일정 삭제 조회 성공");
+    }
+
 
     private String localDateTimeFormat(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

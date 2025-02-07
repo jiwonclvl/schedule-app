@@ -61,6 +61,17 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, dto.getTitle(), dto.getContents()), HttpStatus.OK);
     }
 
+    //일정 삭제
+    @DeleteMapping("/delete/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long scheduleId
+    ) {
+        log.info("일정 삭제 API 호출");
+
+        scheduleService.deleteSchedule(scheduleId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     private Long getHttpSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
