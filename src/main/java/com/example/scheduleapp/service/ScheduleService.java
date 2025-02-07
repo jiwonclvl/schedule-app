@@ -1,8 +1,6 @@
 package com.example.scheduleapp.service;
 
-import com.example.scheduleapp.dto.ScheduleResponseDto;
-import com.example.scheduleapp.entity.Schedule;
-import org.springframework.stereotype.Service;
+import com.example.scheduleapp.dto.response.ScheduleResponseDto;
 
 
 public interface ScheduleService {

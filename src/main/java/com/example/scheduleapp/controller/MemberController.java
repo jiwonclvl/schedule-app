@@ -1,7 +1,10 @@
 package com.example.scheduleapp.controller;
 
 
-import com.example.scheduleapp.dto.*;
+import com.example.scheduleapp.dto.request.DeleteMemberRequestDto;
+import com.example.scheduleapp.dto.request.UpdateMemberEmailRequestDto;
+import com.example.scheduleapp.dto.request.UpdateMemberPasswordRequestDto;
+import com.example.scheduleapp.dto.response.MemberResponseDto;
 import com.example.scheduleapp.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +54,7 @@ public class MemberController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
             @PathVariable Long id,
-            @Validated @RequestBody DeleteMemberReqestDto dto
+            @Validated @RequestBody DeleteMemberRequestDto dto
     ) {
         log.info("유저 삭제 API 호출");
         userService.deleteUser(id, dto.getPassword());

@@ -1,7 +1,6 @@
 package com.example.scheduleapp.service;
 
-import com.example.scheduleapp.dto.MemberResponseDto;
-import com.example.scheduleapp.dto.ScheduleResponseDto;
+import com.example.scheduleapp.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.entity.Member;
 import com.example.scheduleapp.entity.Schedule;
 import com.example.scheduleapp.repository.MemberRepository;
@@ -32,6 +31,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setMember(member);
 
         Schedule saveSchedule = scheduleRepository.save(schedule);
+
+        log.info("일정 등록 성공");
 
         return new ScheduleResponseDto(
                 saveSchedule.getId(),

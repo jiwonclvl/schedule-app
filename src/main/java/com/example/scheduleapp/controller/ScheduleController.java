@@ -1,7 +1,7 @@
 package com.example.scheduleapp.controller;
 
-import com.example.scheduleapp.dto.ScheduleRequestDto;
-import com.example.scheduleapp.dto.ScheduleResponseDto;
+import com.example.scheduleapp.dto.request.ScheduleRequestDto;
+import com.example.scheduleapp.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.service.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,7 +34,7 @@ public class ScheduleController {
     }
 
     //일정 전체 조회
-//    @GetMapping ("/{id}")
+//    @GetMapping ()
 //    public ResponseEntity<List<ScheduleResponseDto>> getSchedules() {
 //
 //    }
