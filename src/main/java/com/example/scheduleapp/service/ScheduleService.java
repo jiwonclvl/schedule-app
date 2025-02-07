@@ -13,5 +13,8 @@ public interface ScheduleService {
     //일정 전체 가져오기
     public List<ScheduleResponseDto> getSchedules();
 
+    //일정 단건 가져오기
+    public ScheduleResponseDto getSchedule(Long getSchedule);
+
 
 }

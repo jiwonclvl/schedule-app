@@ -58,7 +58,25 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다.");
         }
 
+        log.info("일정 전체 성공");
+
         return scheduleList;
+    }
+
+    @Override
+    public ScheduleResponseDto getSchedule(Long getSchedule) {
+        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(getSchedule);
+
+        log.info("일정 단건 조회 성공");
+
+        return new ScheduleResponseDto(
+                findschedule.getId(),
+                findschedule.getMember().getUsername(),
+                findschedule.getTitle(),
+                findschedule.getContents(),
+                localDateTimeFormat(findschedule.getCreatedAt()),
+                localDateTimeFormat(findschedule.getUpdatedAt())
+        );
     }
 
     private String localDateTimeFormat(LocalDateTime dateTime) {

@@ -35,16 +35,25 @@ public class ScheduleController {
     }
 
     //일정 전체 조회
-    @GetMapping ()
+    @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> getSchedules() {
         log.info("일정 전체 조회 API 호출");
 
         return new ResponseEntity<>(scheduleService.getSchedules(), HttpStatus.OK);
     }
 
+    //일정 단건 조회
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long scheduleId) {
+        log.info("일정 단건 조회 API 호출");
+
+        return new ResponseEntity<>(scheduleService.getSchedule(scheduleId), HttpStatus.OK);
+    }
+
     private Long getHttpSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         return (Long) session.getAttribute("id");
     }
+
 
 }
