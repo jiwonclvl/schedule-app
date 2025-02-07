@@ -3,6 +3,8 @@ package com.example.scheduleapp.controller;
 import com.example.scheduleapp.dto.ScheduleRequestDto;
 import com.example.scheduleapp.dto.ScheduleResponseDto;
 import com.example.scheduleapp.service.ScheduleService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,14 +22,16 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     //일정 등록
-    @PostMapping("/{memberid}")
+    @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(
-            @PathVariable Long id,
-            @RequestBody ScheduleRequestDto dto
+            @RequestBody ScheduleRequestDto dto,
+            HttpServletRequest request
     ) {
         log.info("일정 생성 API 호출");
 
-        //
+        //session으로 유저 정보 가져오기
+        HttpSession session = request.getSession(false);
+        Long id = (Long) session.getAttribute("id");
         return new ResponseEntity<>(scheduleService.creatSchedule(id, dto.getTitle(), dto.getContents()), HttpStatus.OK);
     }
 
