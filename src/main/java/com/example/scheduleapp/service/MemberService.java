@@ -2,6 +2,7 @@ package com.example.scheduleapp.service;
 
 
 import com.example.scheduleapp.dto.MemberResponseDto;
+import com.example.scheduleapp.entity.Member;
 
 public interface MemberService {
 
@@ -9,7 +10,10 @@ public interface MemberService {
     public MemberResponseDto createUser(String username, String email, String password);
 
     //특정 유저 조회
-    public MemberResponseDto findUser(Long id);
+    public MemberResponseDto findUserById(Long id);
+
+    //이메일과 비밀번호로 유저 조회
+    public Long findUserByEmailAndPassword(String email, String password);
 
     //유저 이메일 수정
     public void updateUserEmail(Long id,String password, String newEmail);
