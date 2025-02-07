@@ -5,19 +5,18 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class UpdateUserEmailRequestDto {
+public class UpdateMemberEmailRequestDto {
 
-    //기존 이메일
     @NotBlank
-    private final String oldEmail;
+    private final String password;
 
     //변경할 이메일
     @NotBlank
     @Email
     private final String newEmail;
 
-    public UpdateUserEmailRequestDto(String oldEmail, String newEmail) {
-        this.oldEmail = oldEmail;
+    public UpdateMemberEmailRequestDto(String password, String newEmail) {
+        this.password = password;
         this.newEmail = newEmail;
     }
 }

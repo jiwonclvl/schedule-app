@@ -2,7 +2,7 @@ package com.example.scheduleapp.controller;
 
 
 import com.example.scheduleapp.dto.*;
-import com.example.scheduleapp.service.UserServiceImpl;
+import com.example.scheduleapp.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/members")
 @RequiredArgsConstructor
-public class UserController {
+public class MemberController {
 
-    private final UserServiceImpl userService;
+    private final MemberServiceImpl userService;
 
     //유저 생성
     @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(
-            @Validated @RequestBody UserRequestDto dto
+    public ResponseEntity<MemberResponseDto> createUser(
+            @Validated @RequestBody MemberRequestDto dto
     ) {
         log.info("유저 생성 API 호출");
 
@@ -30,7 +30,7 @@ public class UserController {
 
     //특정 유저 조회
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findUser(@PathVariable Long id) {
+    public ResponseEntity<MemberResponseDto> findUser(@PathVariable Long id) {
         log.info("특정 유저 조회 API 호출");
         return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
     }
@@ -40,10 +40,10 @@ public class UserController {
     @PatchMapping("/email/{id}")
     public ResponseEntity<Void> updateUserEmail(
             @PathVariable Long id,
-            @Validated @RequestBody UpdateUserEmailRequestDto dto
+            @Validated @RequestBody UpdateMemberEmailRequestDto dto
     ) {
         log.info("유저 이메일 수정 API 호출");
-        userService.updateUserEmail(id, dto.getOldEmail(), dto.getNewEmail());
+        userService.updateUserEmail(id, dto.getPassword(), dto.getNewEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -51,7 +51,7 @@ public class UserController {
     @PatchMapping("/password/{id}")
     public ResponseEntity<Void> updateUserPassword(
             @PathVariable Long id,
-            @Validated @RequestBody UpdateUserPasswordRequestDto dto
+            @Validated @RequestBody UpdateMemberPasswordRequestDto dto
     ) {
         log.info("유저 비밀번호 수정 API 호출");
         userService.updateUserPassword(id, dto.getOldPassword(), dto.getNewPassword());
@@ -63,7 +63,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
             @PathVariable Long id,
-            @Validated @RequestBody DeleteUserReqestDto dto
+            @Validated @RequestBody DeleteMemberReqestDto dto
     ) {
         log.info("유저 삭제 API 호출");
         userService.deleteUser(id, dto.getPassword());

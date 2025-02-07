@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table (name = "users")
-public class User extends BaseDateTime{
+public class Member extends BaseDateTime{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +21,11 @@ public class User extends BaseDateTime{
     @Column(nullable = false)
     private String password;
 
-    public User() {
+    public Member() {
 
     }
 
-    public User(String username, String email, String password) {
+    public Member(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
