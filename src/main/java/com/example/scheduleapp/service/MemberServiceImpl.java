@@ -37,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponseDto findUser(Long id) {
+    public MemberResponseDto findUserById(Long id) {
         Member findUser = userRepository.findUserByIdOrElseThrow(id);
         log.info("특정 유저 조회 성공");
 
@@ -47,6 +47,20 @@ public class MemberServiceImpl implements MemberService {
                 localDateTimeFormat(findUser.getCreatedAt()),
                 localDateTimeFormat(findUser.getUpdatedAt())
         );
+    }
+
+    @Override
+    @Transactional
+    public Long findUserByEmailAndPassword(String email, String password) {
+        Member findUser = userRepository.findUserByEmailOrElseThrow(email);
+
+        if (findUser.getEmail().equals(email) && findUser.getPassword().equals(password)) {
+            log.info("로그인 성공");
+            return findUser.getId();
+        }
+
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
     }
 
     @Override
@@ -74,7 +88,7 @@ public class MemberServiceImpl implements MemberService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
-        findUser.updateEmail(newPassword);
+        findUser.updatePassword(newPassword);
         log.info("유저 비밀번호 수정 성공");
     }
 

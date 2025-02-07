@@ -18,24 +18,13 @@ public class MemberController {
 
     private final MemberServiceImpl userService;
 
-    //유저 생성
-    @PostMapping
-    public ResponseEntity<MemberResponseDto> createUser(
-            @Validated @RequestBody MemberRequestDto dto
-    ) {
-        log.info("유저 생성 API 호출");
-
-        return new ResponseEntity<>(userService.createUser(dto.getUsername(),dto.getEmail(), dto.getPassword()), HttpStatus.OK);
-    }
-
     //특정 유저 조회
     @GetMapping("/{id}")
     public ResponseEntity<MemberResponseDto> findUser(@PathVariable Long id) {
         log.info("특정 유저 조회 API 호출");
-        return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
     }
 
-    //TODO 수정 부분 동일 따로 할 필요 없음
     //유저 이메일 수정
     @PatchMapping("/email/{id}")
     public ResponseEntity<Void> updateUserEmail(
@@ -59,7 +48,6 @@ public class MemberController {
     }
 
     //유저 삭제
-    //TODO: body말고 param으로
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
             @PathVariable Long id,

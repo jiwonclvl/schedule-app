@@ -8,13 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.PatternMatchUtils;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 @Slf4j
-public class LoginFilter implements Filter {
+public class LoginCheckFilter implements Filter {
 
-    // WHITELIST URI는 요청 로직에서 제외
-    private static final String[] WHITELIST = {"/","/members/signup", "login", "logout"};
+    // WHITELIST URI는 요청 로직에서 제외 (로그인, 로그아웃, 회원가입)
+    private static final String[] WHITELIST = {"/","/login", "/logout", "/signup"};
 
     @Override
     public void doFilter(
@@ -23,15 +22,10 @@ public class LoginFilter implements Filter {
             FilterChain filterChain
     ) throws IOException, ServletException {
 
-        //필터에서 수행할 로직
-        //Servlet은 기능이 많이 없음, 따라서 다운 캐스팅 진행 (요청)
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        //실제 요청이 들어온 URI를 변수로 담아준다.
         String requestURI = httpRequest.getRequestURI();
 
-        //필터에서 수행할 로직
-        //Servlet은 기능이 많이 없음, 따라서 다운 캐스팅 진행 (응답)
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         log.info("로그인 필터 로직 실행");
@@ -43,12 +37,13 @@ public class LoginFilter implements Filter {
             HttpSession session = httpRequest.getSession(false);
 
             if(session == null || session.getAttribute(("id")) == null) {
-                throw new RuntimeException("로그인 후 이용 가능합니다.");
+                //로그인 페이지로 이동
+                //todo: 현재 서버에러 추후 클라이언트 에러로 바꾸기
+                throw new RuntimeException("로그인 해주세요");
             }
-
-            log.info("로그인 여부 확인 성공");
         }
 
+        log.info("로그인 확인 성공");
         filterChain.doFilter(request, response);
     }
 
