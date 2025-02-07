@@ -35,6 +35,7 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.creatSchedule(httpSessionId, dto.getTitle(), dto.getContents()), HttpStatus.OK);
     }
 
+    //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기
     //일정 전체 조회
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> getSchedules() {

@@ -48,6 +48,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
+    //todo: 일정 조회 부분은 로그인 하지 않아도 볼 수 있도록 하고 싶음
     @Override
     public List<ScheduleResponseDto> getSchedules() {
         List<ScheduleResponseDto> scheduleList = scheduleRepository.findAll()
