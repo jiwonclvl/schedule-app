@@ -1,21 +1,27 @@
 package com.example.scheduleapp.service;
 
+import com.example.scheduleapp.dto.response.SchedulePageResponseDto;
 import com.example.scheduleapp.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.entity.Member;
 import com.example.scheduleapp.entity.Schedule;
+import com.example.scheduleapp.repository.CommentRepository;
 import com.example.scheduleapp.repository.MemberRepository;
 import com.example.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 
 @Slf4j
 @Service
@@ -24,6 +30,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional
@@ -51,19 +58,28 @@ public class ScheduleServiceImpl implements ScheduleService {
     //todo: 일정 조회 부분은 로그인 하지 않아도 볼 수 있도록 하고 싶음 (URI 변경 후 적용)
     //todo: 일정 조회 시 날짜 출력 형식 변경하기
     @Override
-    public List<ScheduleResponseDto> getSchedules() {
-        List<ScheduleResponseDto> scheduleList = scheduleRepository.findAll()
-                .stream()
-                .map(ScheduleResponseDto::ScheduleDto)
+    public List<SchedulePageResponseDto> getSchedules(int page, int pageSize) {
+
+        //페이지 객체 생성
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("updatedAt").descending());
+        Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
+
+        List<SchedulePageResponseDto> schedulePagelist = schedulePage.getContent().stream()
+                .map(schedule -> {
+                    Long totalComment = commentRepository.countByScheduleId(schedule.getId());
+                    return new SchedulePageResponseDto(
+                            schedule.getMember().getUsername(),
+                            schedule.getTitle(),
+                            schedule.getContents(),
+                            totalComment,
+                            schedule.getCreatedAt(),
+                            schedule.getUpdatedAt()
+                    );
+                })
                 .toList();
 
-        if(scheduleList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다.");
-        }
-
         log.info("일정 전체 성공");
-
-        return scheduleList;
+        return schedulePagelist;
     }
 
     @Override

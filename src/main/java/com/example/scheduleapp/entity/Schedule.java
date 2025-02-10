@@ -19,7 +19,7 @@ public class Schedule extends BaseDateTime {
 
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

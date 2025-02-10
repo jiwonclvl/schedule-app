@@ -27,7 +27,7 @@ public class ScheduleResponseDto {
         this.updatedAt = updatedAt;
     }
 
-    public static  ScheduleResponseDto ScheduleDto(Schedule schedule) {
+    public static  ScheduleResponseDto ScheduleDto(Schedule schedule, int totalComment) {
         return new ScheduleResponseDto(
                 schedule.getId(),
                 schedule.getMember().getUsername(),

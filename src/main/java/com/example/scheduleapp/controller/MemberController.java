@@ -50,6 +50,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //todo: 유저 삭제 시 모든 일정과 댓글 삭제
     //유저 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
