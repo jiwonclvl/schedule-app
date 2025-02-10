@@ -34,12 +34,15 @@ public class CommentServiceImpl implements CommentService {
         Member member = memberRepository.findUserByIdOrElseThrow(httpSessionId);
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(scheduleId);
 
+        log.info("유저 및 일정 확인 완료");
+
         //댓글 생성
         Comment comment = new Comment(content, member, schedule);
 
         //값 저장하기
         Comment savedComment = commentRepository.save(comment);
 
+        log.info("댓글 생성 완료");
         return new CommentResponseDto(
                 savedComment.getId(),
                 savedComment.getMember().getId(),
@@ -60,6 +63,8 @@ public class CommentServiceImpl implements CommentService {
         if (commentList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다.");
         }
+
+        log.info("댓글 조회 완료");
 
         return commentList;
     }
