@@ -13,7 +13,7 @@ import java.io.IOException;
 public class LoginCheckFilter implements Filter {
 
     // WHITELIST URI는 요청 로직에서 제외 (로그인, 로그아웃, 회원가입)
-    private static final String[] WHITELIST = {"/","/login", "/logout", "/signup"};
+    private static final String[] WHITELIST = {"/","/login", "/logout", "/signup", "/schedules/comments"};
 
     @Override
     public void doFilter(

@@ -26,4 +26,6 @@ public class SignUpController {
         log.info("회원가입 API 호출");
         return new ResponseEntity<>(memberService.createUser(dto.getUsername(),dto.getEmail(), dto.getPassword()), HttpStatus.OK);
     }
+
+    //todo: 이미 존재하는 이메일인 경우 오류 메세지
 }
