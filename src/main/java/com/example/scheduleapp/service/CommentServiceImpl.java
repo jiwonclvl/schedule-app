@@ -75,6 +75,7 @@ public class CommentServiceImpl implements CommentService {
     public void updateComment(Long commentId, String comment) {
         Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
 
+        //todo: 입력한 댓글이 비어있다면 기존 값 유지
         //댓글 수정
         findComment.updateComment(comment);
 
