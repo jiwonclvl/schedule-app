@@ -12,7 +12,7 @@ public class Comment extends BaseDateTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String comment;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -21,4 +21,14 @@ public class Comment extends BaseDateTime {
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
+
+    public Comment() {
+
+    }
+
+    public Comment(String content, Member member, Schedule schedule) {
+        this.content = content;
+        this.member = member;
+        this.schedule = schedule;
+    }
 }
