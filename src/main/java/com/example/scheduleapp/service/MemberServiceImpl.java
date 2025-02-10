@@ -1,6 +1,5 @@
 package com.example.scheduleapp.service;
 
-import com.example.scheduleapp.config.PasswordEncoder;
 import com.example.scheduleapp.dto.response.MemberResponseDto;
 import com.example.scheduleapp.entity.Member;
 import com.example.scheduleapp.repository.MemberRepository;
@@ -19,15 +18,11 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public MemberResponseDto createUser(String username, String email, String password) {
-
-        //비밀번호 암호화
-        String encodePassword = passwordEncoder.encode(password);
-        Member user = new Member(username, email, encodePassword);
+        Member user = new Member(username, email, password);
 
         Member savedUser = userRepository.save(user);
 
@@ -59,10 +54,7 @@ public class MemberServiceImpl implements MemberService {
     public Long findUserByEmailAndPassword(String email, String password) {
         Member findUser = userRepository.findUserByEmailOrElseThrow(email);
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
-
-        if (findUser.getEmail().equals(email) && passwordMatch) {
+        if (findUser.getEmail().equals(email) && findUser.getPassword().equals(password)) {
             log.info("로그인 성공");
             return findUser.getId();
         }
@@ -77,10 +69,8 @@ public class MemberServiceImpl implements MemberService {
         Member findUser = userRepository.findUserByIdOrElseThrow(id);
         log.info("유저 조회 성공");
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
-
-        if(!passwordMatch) {
+        //TODO: 변경할 이메일이 기존 이메일과 같은 경우에는 --> 200대는 되지만 기존과 같다고 메세지 띄우고 싶음
+        if(!findUser.getPassword().equals(password)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
@@ -94,16 +84,11 @@ public class MemberServiceImpl implements MemberService {
         Member findUser = userRepository.findUserByIdOrElseThrow(id);
         log.info("유저 조회 성공");
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(oldPassword, findUser.getPassword());
-
-        if(!passwordMatch) {
+        if(!findUser.getPassword().equals(oldPassword)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
-        //비밀번호 암호화
-        String encodePassword = passwordEncoder.encode(newPassword);
-        findUser.updatePassword(encodePassword);
+        findUser.updatePassword(newPassword);
         log.info("유저 비밀번호 수정 성공");
     }
 
@@ -113,10 +98,7 @@ public class MemberServiceImpl implements MemberService {
         Member findUser = userRepository.findUserByIdOrElseThrow(id);
         log.info("유저 조회 성공");
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
-
-        if(!passwordMatch) {
+        if(!findUser.getPassword().equals(password)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
