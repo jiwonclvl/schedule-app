@@ -9,11 +9,14 @@ import com.example.scheduleapp.repository.MemberRepository;
 import com.example.scheduleapp.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -45,6 +48,20 @@ public class CommentServiceImpl implements CommentService {
                 localDateTimeFormat(savedComment.getCreatedAt()),
                 localDateTimeFormat(savedComment.getUpdatedAt())
         );
+    }
+
+    @Override
+    public List<CommentResponseDto> getComments() {
+        List<CommentResponseDto> commentList = commentRepository.findAll()
+                .stream()
+                .map(CommentResponseDto::commentDto)
+                .toList();
+
+        if (commentList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다.");
+        }
+
+        return commentList;
     }
 
     private String localDateTimeFormat(LocalDateTime dateTime) {

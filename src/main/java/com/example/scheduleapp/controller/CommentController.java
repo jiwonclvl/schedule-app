@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/schedules/comments")
 @RequiredArgsConstructor
@@ -27,6 +29,12 @@ public class CommentController {
         //세션에 담긴 값 넘겨주기 (유저의 id값이 담겨있다.)
         Long httpSessionId = getHttpSessionId(request);
         return new ResponseEntity<>(commentService.createComment(scheduleId, httpSessionId, dto.getContent()), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CommentResponseDto>> getComments() {
+
+        return new ResponseEntity<>(commentService.getComments(), HttpStatus.OK);
     }
 
     private Long getHttpSessionId(HttpServletRequest request) {

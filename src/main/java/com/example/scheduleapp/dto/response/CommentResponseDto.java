@@ -1,5 +1,6 @@
 package com.example.scheduleapp.dto.response;
 
+import com.example.scheduleapp.entity.Comment;
 import lombok.Getter;
 
 @Getter
@@ -23,5 +24,16 @@ public class CommentResponseDto {
         this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static CommentResponseDto commentDto(Comment comment) {
+        return new CommentResponseDto(
+                comment.getId(),
+                comment.getMember().getId(),
+                comment.getSchedule().getId(),
+                comment.getContent(),
+                comment.getCreatedAt().toString(),
+                comment.getUpdatedAt().toString()
+        );
     }
 }
