@@ -22,15 +22,10 @@ public class LoginCheckFilter implements Filter {
             FilterChain filterChain
     ) throws IOException, ServletException {
 
-        //필터에서 수행할 로직
-        //Servlet은 기능이 많이 없음, 따라서 다운 캐스팅 진행 (요청)
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        //실제 요청이 들어온 URI를 변수로 담아준다.
         String requestURI = httpRequest.getRequestURI();
 
-        //필터에서 수행할 로직
-        //Servlet은 기능이 많이 없음, 따라서 다운 캐스팅 진행 (응답)
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         log.info("로그인 필터 로직 실행");
@@ -43,6 +38,7 @@ public class LoginCheckFilter implements Filter {
 
             if(session == null || session.getAttribute(("id")) == null) {
                 //로그인 페이지로 이동
+                //todo: 현재 서버에러 추후 클라이언트 에러로 바꾸기
                 throw new RuntimeException("로그인 해주세요");
             }
         }
