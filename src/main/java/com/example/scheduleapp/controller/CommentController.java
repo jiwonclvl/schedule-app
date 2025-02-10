@@ -1,6 +1,7 @@
 package com.example.scheduleapp.controller;
 
 import com.example.scheduleapp.dto.request.CommentRequestDto;
+import com.example.scheduleapp.dto.request.UpdateCommentRequestDto;
 import com.example.scheduleapp.dto.response.CommentResponseDto;
 import com.example.scheduleapp.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,16 @@ public class CommentController {
     public ResponseEntity<List<CommentResponseDto>> getComments() {
         log.info("댓글 전체 조회 API 호출");
         return new ResponseEntity<>(commentService.getComments(), HttpStatus.OK);
+    }
+
+    @PatchMapping("/content/{commentId}")
+    public ResponseEntity<Void> updateComment(
+            @PathVariable Long commentId,
+            @RequestBody UpdateCommentRequestDto dto
+    ) {
+        log.info("댓글 수정 API 호출");
+        commentService.updateComment(commentId, dto.getContent());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private Long getHttpSessionId(HttpServletRequest request) {

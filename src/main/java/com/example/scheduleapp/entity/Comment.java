@@ -31,4 +31,8 @@ public class Comment extends BaseDateTime {
         this.member = member;
         this.schedule = schedule;
     }
+
+    public void updateComment(String content) {
+        this.content = content;
+    }
 }

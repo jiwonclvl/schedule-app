@@ -70,6 +70,17 @@ public class CommentServiceImpl implements CommentService {
         return commentList;
     }
 
+    @Override
+    @Transactional
+    public void updateComment(Long commentId, String comment) {
+        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
+
+        //댓글 수정
+        findComment.updateComment(comment);
+
+        log.info("댓글 수정 완료");
+    }
+
     private String localDateTimeFormat(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }

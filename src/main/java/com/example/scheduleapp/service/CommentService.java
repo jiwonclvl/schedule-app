@@ -11,4 +11,8 @@ public interface CommentService {
 
     //댓글 전체 조회
     public List<CommentResponseDto> getComments();
+
+    //댓글 수정
+    public void updateComment(Long commentId, String content);
+
 }
