@@ -15,4 +15,7 @@ public interface CommentService {
     //댓글 수정
     public void updateComment(Long commentId, String content);
 
+    //댓글 삭제
+    public void deleteComment(Long commentId);
+
 }

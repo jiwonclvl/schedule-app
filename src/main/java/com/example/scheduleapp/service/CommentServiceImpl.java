@@ -82,6 +82,15 @@ public class CommentServiceImpl implements CommentService {
         log.info("댓글 수정 완료");
     }
 
+    @Override
+    public void deleteComment(Long commentId) {
+        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
+
+        //댓글 삭제
+        commentRepository.delete(findComment);
+        log.info("댓글 삭제 완료");
+    }
+
     private String localDateTimeFormat(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }

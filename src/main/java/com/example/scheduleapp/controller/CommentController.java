@@ -50,6 +50,13 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+        log.info("댓글 삭제 API 호출");
+        commentService.deleteComment(commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     private Long getHttpSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         return (Long) session.getAttribute("id");
