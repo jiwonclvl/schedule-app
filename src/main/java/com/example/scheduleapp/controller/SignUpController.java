@@ -1,7 +1,7 @@
 package com.example.scheduleapp.controller;
 
-import com.example.scheduleapp.dto.MemberRequestDto;
-import com.example.scheduleapp.dto.MemberResponseDto;
+import com.example.scheduleapp.dto.request.MemberRequestDto;
+import com.example.scheduleapp.dto.response.MemberResponseDto;
 import com.example.scheduleapp.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

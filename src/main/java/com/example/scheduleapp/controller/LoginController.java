@@ -1,6 +1,6 @@
 package com.example.scheduleapp.controller;
 
-import com.example.scheduleapp.dto.LoginRequestDto;
+import com.example.scheduleapp.dto.request.LoginRequestDto;
 import com.example.scheduleapp.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

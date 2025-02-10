@@ -1,4 +1,4 @@
-package com.example.scheduleapp.dto;
+package com.example.scheduleapp.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
