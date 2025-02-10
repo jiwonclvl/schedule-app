@@ -20,6 +20,8 @@ public class Schedule extends BaseDateTime {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
+
+    //외래키 지정
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -32,6 +34,7 @@ public class Schedule extends BaseDateTime {
         this.contents = contents;
     }
 
+    //todo: 메서드명 변경
     public void setMember(Member member) {
         this.member = member;
     }
