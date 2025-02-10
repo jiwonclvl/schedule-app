@@ -53,6 +53,7 @@ public class CommentServiceImpl implements CommentService {
         );
     }
 
+    //todo: 댓글의 날짜 출력 형식 변경하기
     @Override
     public List<CommentResponseDto> getComments() {
         List<CommentResponseDto> commentList = commentRepository.findAll()

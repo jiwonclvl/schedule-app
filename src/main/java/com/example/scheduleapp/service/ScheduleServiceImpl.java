@@ -48,7 +48,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
-    //todo: 일정 조회 부분은 로그인 하지 않아도 볼 수 있도록 하고 싶음
+    //todo: 일정 조회 부분은 로그인 하지 않아도 볼 수 있도록 하고 싶음 (URI 변경 후 적용)
+    //todo: 일정 조회 시 날짜 출력 형식 변경하기
     @Override
     public List<ScheduleResponseDto> getSchedules() {
         List<ScheduleResponseDto> scheduleList = scheduleRepository.findAll()
