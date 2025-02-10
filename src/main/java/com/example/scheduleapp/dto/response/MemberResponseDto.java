@@ -11,13 +11,16 @@ public class MemberResponseDto {
 
     private final String createdAt;
 
-    private final String updateedAt;
+    private final String updatedAt;
 
 
-    public MemberResponseDto(Long id, String username, String createdAt, String updateedAt) {
+    //private로 막은 후 static 메서드를 호출해서 MemberResponseDto빈허ㅣㄴ
+    public MemberResponseDto(Long id, String username, String createdAt, String updatedAt) {
         this.id = id;
         this.username = username;
         this.createdAt = createdAt;
-        this.updateedAt = updateedAt;
+        this.updatedAt = updatedAt;
     }
+
+//    public static MemberResponseDto toDto(Member member)
 }

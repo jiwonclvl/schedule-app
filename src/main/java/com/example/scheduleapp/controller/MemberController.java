@@ -21,14 +21,12 @@ public class MemberController {
 
     private final MemberServiceImpl userService;
 
-    //특정 유저 조회
     @GetMapping("/{id}")
     public ResponseEntity<MemberResponseDto> findUser(@PathVariable Long id) {
         log.info("특정 유저 조회 API 호출");
         return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
     }
 
-    //유저 이메일 수정
     @PatchMapping("/email/{id}")
     public ResponseEntity<Void> updateUserEmail(
             @PathVariable Long id,
@@ -39,7 +37,6 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //유저 비밀번호 수정
     @PatchMapping("/password/{id}")
     public ResponseEntity<Void> updateUserPassword(
             @PathVariable Long id,
@@ -50,7 +47,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //유저 삭제
+    //todo: 유저 삭제 시 모든 일정과 댓글 --> 남겨두기
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
             @PathVariable Long id,

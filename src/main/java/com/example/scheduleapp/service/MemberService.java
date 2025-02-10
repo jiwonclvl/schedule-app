@@ -11,7 +11,7 @@ public interface MemberService {
     //특정 유저 조회
     public MemberResponseDto findUserById(Long id);
 
-    //이메일과 비밀번호로 유저 조회
+    //이메일과 비밀번호로 유저 조회 (로그인)
     public Long findUserByEmailAndPassword(String email, String password);
 
     //유저 이메일 수정

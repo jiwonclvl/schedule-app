@@ -2,6 +2,7 @@ package com.example.scheduleapp.controller;
 
 import com.example.scheduleapp.dto.request.ScheduleRequestDto;
 import com.example.scheduleapp.dto.request.UpdateScheduleRequestDto;
+import com.example.scheduleapp.dto.response.SchedulePageResponseDto;
 import com.example.scheduleapp.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.service.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,6 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    //일정 등록
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(
             @RequestBody ScheduleRequestDto dto,
@@ -36,15 +36,16 @@ public class ScheduleController {
     }
 
     //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기
-    //일정 전체 조회
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getSchedules() {
+    public ResponseEntity<List<SchedulePageResponseDto>> getSchedules(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
         log.info("일정 전체 조회 API 호출");
 
-        return new ResponseEntity<>(scheduleService.getSchedules(), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.getSchedules(page,pageSize), HttpStatus.OK);
     }
 
-    //일정 단건 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long scheduleId) {
         log.info("일정 단건 조회 API 호출");
@@ -52,7 +53,6 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.getSchedule(scheduleId), HttpStatus.OK);
     }
 
-    //일정 수정
     @PatchMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long scheduleId,
@@ -62,7 +62,7 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, dto.getTitle(), dto.getContents()), HttpStatus.OK);
     }
 
-    //일정 삭제
+    //todo: 일정 삭제 시 댓글 삭제
     @DeleteMapping("/delete/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long scheduleId
