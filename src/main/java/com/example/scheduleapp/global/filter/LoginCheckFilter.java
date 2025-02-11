@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 
 import java.io.IOException;
@@ -13,7 +14,13 @@ import java.io.IOException;
 public class LoginCheckFilter implements Filter {
 
     // WHITELIST URI는 요청 로직에서 제외 (로그인, 로그아웃, 회원가입)
-    private static final String[] WHITELIST = {"/","/login", "/logout", "/members/signup", "/schedules/comments"};
+    private static final String[] WHITELIST = {
+            "/",
+            "/login",
+            "/logout",
+            "/members/signup",
+            "/schedules/comments"
+    };
 
     @Override
     public void doFilter(

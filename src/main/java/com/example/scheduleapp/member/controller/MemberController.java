@@ -1,6 +1,7 @@
 package com.example.scheduleapp.member.controller;
 
 
+import com.example.scheduleapp.global.SuccessResponseDto;
 import com.example.scheduleapp.member.dto.request.DeleteMemberRequestDto;
 import com.example.scheduleapp.member.dto.request.MemberRequestDto;
 import com.example.scheduleapp.member.dto.request.UpdateMemberEmailRequestDto;
@@ -30,40 +31,40 @@ public class MemberController {
         return new ResponseEntity<>(memberService.createUser(dto.getUsername(),dto.getEmail(), dto.getPassword()), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberResponseDto> findUser(@PathVariable Long id) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<MemberResponseDto> findUser(@PathVariable Long userId) {
         log.info("특정 유저 조회 API 호출");
-        return new ResponseEntity<>(memberService.findUserById(id), HttpStatus.OK);
+        return new ResponseEntity<>(memberService.findUserById(userId), HttpStatus.OK);
     }
 
-    @PatchMapping("/email/{id}")
-    public ResponseEntity<Void> updateUserEmail(
-            @PathVariable Long id,
+    @PatchMapping("/email/{userId}")
+    public ResponseEntity<SuccessResponseDto> updateUserEmail(
+            @PathVariable Long userId,
             @Validated @RequestBody UpdateMemberEmailRequestDto dto
     ) {
         log.info("유저 이메일 수정 API 호출");
-        memberService.updateUserEmail(id, dto.getPassword(), dto.getNewEmail());
-        return new ResponseEntity<>(HttpStatus.OK);
+        String message = memberService.updateUserEmail(userId, dto.getPassword(), dto.getNewEmail());
+        return SuccessResponseDto.successResponse(message);
     }
 
-    @PatchMapping("/password/{id}")
-    public ResponseEntity<Void> updateUserPassword(
-            @PathVariable Long id,
+    @PatchMapping("/password/{userId}")
+    public ResponseEntity<SuccessResponseDto> updateUserPassword(
+            @PathVariable Long userId,
             @Validated @RequestBody UpdateMemberPasswordRequestDto dto
     ) {
         log.info("유저 비밀번호 수정 API 호출");
-        memberService.updateUserPassword(id, dto.getOldPassword(), dto.getNewPassword());
-        return new ResponseEntity<>(HttpStatus.OK);
+        String message = memberService.updateUserPassword(userId, dto.getOldPassword(), dto.getNewPassword());
+        return SuccessResponseDto.successResponse(message);
     }
 
-    //todo: 유저 삭제 시 모든 일정과 댓글 --> 남겨두기
-    @DeleteMapping("/{id}")
+    //todo: 유저 삭제 시 모든 일정과 댓글 --> 남겨두기 (delete 후 완전 삭제가 아닌 delete 여부 값을 추가하여 물리적으로만 클라이언트에게 삭제 된 것처럼 보이게 하기)
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<Void> deleteUser(
-            @PathVariable Long id,
+            @PathVariable Long userId,
             @Validated @RequestBody DeleteMemberRequestDto dto
     ) {
         log.info("유저 삭제 API 호출");
-        memberService.deleteUser(id, dto.getPassword());
+        memberService.deleteUser(userId, dto.getPassword());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

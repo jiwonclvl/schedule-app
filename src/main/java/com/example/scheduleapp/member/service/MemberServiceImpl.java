@@ -57,7 +57,8 @@ public class MemberServiceImpl{
     public MemberResponseDto findUserById(Long id) {
 
         /*객체 조회*/
-        Member userById = getUserById(id);
+        Member userById = getUserByIdOrElseThrow(id);
+
         log.info("특정 유저 조회 성공");
 
         return new MemberResponseDto(
@@ -91,38 +92,48 @@ public class MemberServiceImpl{
 
     /*이메일 수정*/
     @Transactional
-    public void updateUserEmail(Long id, String password, String newEmail) {
+    public String updateUserEmail(Long id, String password, String newEmail) {
         /*객체 조회*/
-        Member findUser = getUserById(id);
+        Member findUser = getUserByIdOrElseThrow(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
 
-        findUser.updateEmail(newEmail);
-        log.info("유저 이메일 수정 성공");
+        /*입력한 이메일이 기존 이메일과 동일하지 않은 경우*/
+        if(!findUser.getEmail().equals(newEmail)) {
+            findUser.updateEmail(newEmail);
+            return "이메일이 성공적으로 변경되었습니다.";
+        }
+
+        /*입력한 이메일이 기존 이메일과 동일*/
+        return "기존 이메일과 동일합니다.";
     }
 
     /*비밀번호 수정*/
     @Transactional
-    public void updateUserPassword(Long id, String oldPassword, String newPassword) {
+    public String updateUserPassword(Long id, String oldPassword, String newPassword) {
         /*객체 조회*/
-        Member findUser = getUserById(id);
-
-        log.info("유저 조회 성공");
+        Member findUser = getUserByIdOrElseThrow(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(oldPassword, findUser);
 
-        //비밀번호 암호화
-        String encodePassword = passwordEncoder.encode(newPassword);
-        findUser.updatePassword(encodePassword);
-        log.info("유저 비밀번호 수정 성공");
+        /*입력한 비밀번호가 기존 비밀번호와 동일하지 않은 경우*/
+        if(!findUser.getPassword().equals(newPassword)) {
+            //비밀번호 암호화
+            String encodePassword = passwordEncoder.encode(newPassword);
+            findUser.updatePassword(encodePassword);
+            return "비밀번호가 성공적으로 변경되었습니다.";
+        }
+
+        /*입력한 이메일이 기존 이메일과 동일*/
+        return "기존 비밀번호와 동일합니다.";
     }
 
     @Transactional
     public void deleteUser(Long id, String password) {
         /*객체 조회*/
-        Member findUser = getUserById(id);
+        Member findUser = getUserByIdOrElseThrow(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
@@ -142,7 +153,7 @@ public class MemberServiceImpl{
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public Member getUserById(Long id) {
+    public Member getUserByIdOrElseThrow(Long id) {
         Optional<Member> findUserById = memberRepository.findUserById(id);
 
         /*조회 되는 객체가 없는 경우 NOT_FOUNT 예외처리*/

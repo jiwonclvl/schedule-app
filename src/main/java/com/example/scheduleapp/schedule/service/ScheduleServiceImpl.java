@@ -6,7 +6,6 @@ import com.example.scheduleapp.schedule.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
-import com.example.scheduleapp.member.repository.MemberRepository;
 import com.example.scheduleapp.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponseDto creatSchedule(Long id, String title, String contents) {
 
         //유저가 있어야 일정이 존재할 수 있다.
-        Member member = memberService.getUserById(id);
+        Member member = memberService.getUserByIdOrElseThrow(id);
         Schedule schedule = new Schedule(title, contents);
         schedule.setMember(member);
 
