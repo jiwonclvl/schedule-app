@@ -2,6 +2,7 @@ package com.example.scheduleapp.schedule.service;
 
 import com.example.scheduleapp.global.exception.ErrorCode;
 import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
+import com.example.scheduleapp.global.exception.custom.ForbiddenException;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.dto.response.SchedulePageResponseDto;
 import com.example.scheduleapp.schedule.dto.response.ScheduleResponseDto;
@@ -9,14 +10,18 @@ import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
 import com.example.scheduleapp.schedule.repository.ScheduleRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -98,26 +103,30 @@ public class ScheduleServiceImpl{
     }
 
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long scheduleId, String title, String contents) {
+    public ScheduleResponseDto updateSchedule(HttpSession session, Long scheduleId, String title, String contents) {
         Schedule schedule = findScheduleById(scheduleId);
 
-        /* todo: 예외처리 추가하기
-        //둘 다 비어 있는 경우 기존 값 유지
-        if(!StringUtils.hasText(title) && !StringUtils.hasText(contents)) {
+        Long userId = schedule.getMember().getId();
+        Object id = session.getAttribute("id");
 
+        /*로그인한 유저가 수정하려는 일정이 다른 사람의 일정인 경우*/
+        if(userId != id) {
+            throw new ForbiddenException(ErrorCode.FORBIDDEN);
         }
-        //title만 있는 경우
-        if(!StringUtils.hasText(title) && !StringUtils.hasText(contents)) {
 
+        //둘 다 변경 된 경우
+        if(!schedule.getTitle().equals(title) &&!schedule.getContents().equals(contents)) {
+            schedule.updateTitle(title);
+            schedule.updateContents(contents);
         }
-        //contents만 있는 경우
-        if(!StringUtils.hasText(title) && !StringUtils.hasText(contents)) {
-
-        } */
-
-        //todo: 여러 사용자의 일정이 등록되어 있는 경우 다른 사용자의 수정을 하려고 하면 예외 처리해야함
-        schedule.updateTitle(title);
-        schedule.updateContents(contents);
+        //title만 변경된 경우
+        if(!schedule.getContents().equals(contents)){
+            schedule.updateContents(title);
+        }
+        //contents만 변경된 경우
+        if(!schedule.getContents().equals(contents)){
+            schedule.updateContents(title);
+        }
 
         log.info("일정 수정 조회 성공");
 
@@ -140,7 +149,7 @@ public class ScheduleServiceImpl{
         log.info("일정 삭제 조회 성공");
     }
 
-    private Schedule findScheduleById(Long scheduleId) {
+    public Schedule findScheduleById(Long scheduleId) {
         Optional<Schedule> findScheduleById = scheduleRepository.findById(scheduleId);
 
         /*일정이 없는 경우 예외*/

@@ -58,10 +58,12 @@ public class ScheduleController {
     @PatchMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody UpdateScheduleRequestDto dto
+            @RequestBody UpdateScheduleRequestDto dto,
+            HttpServletRequest request
     ) {
         log.info("일정 수정 API 호출");
-        return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, dto.getTitle(), dto.getContents()), HttpStatus.OK);
+        HttpSession session = request.getSession(false);
+        return new ResponseEntity<>(scheduleService.updateSchedule(session, scheduleId, dto.getTitle(), dto.getContents()), HttpStatus.OK);
     }
 
     //todo: 일정 삭제 시 댓글 삭제

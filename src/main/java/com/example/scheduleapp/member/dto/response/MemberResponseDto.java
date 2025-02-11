@@ -13,7 +13,6 @@ public class MemberResponseDto {
 
     private final String updatedAt;
 
-
     //private로 막은 후 static 메서드를 호출해서 MemberResponseDto빈허ㅣㄴ
     public MemberResponseDto(Long id, String username, String createdAt, String updatedAt) {
         this.id = id;
@@ -22,5 +21,5 @@ public class MemberResponseDto {
         this.updatedAt = updatedAt;
     }
 
-//    public static MemberResponseDto toDto(Member member)
+
 }

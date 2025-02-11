@@ -7,6 +7,7 @@ import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
 import com.example.scheduleapp.schedule.repository.ScheduleRepository;
+import com.example.scheduleapp.schedule.service.ScheduleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class CommentServiceImpl implements CommentService {
 
     //Service가 있어야 한다.
     private final MemberServiceImpl memberService;
-    private final ScheduleRepository scheduleRepository;
+    private final ScheduleServiceImpl scheduleService;
     private final CommentRepository commentRepository;
 
     @Override
@@ -33,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponseDto createComment(Long scheduleId, Long httpSessionId, String content) {
         //유저와 일정이 모두 있어야 댓글이 존재할 수 있다. (또한 유저는 일정을 선택하여 댓글 등록을 할 수 있다.)
         Member member = memberService.getUserByIdOrElseThrow(httpSessionId);
-        Schedule schedule = scheduleRepository.findByIdOrElseThrow(scheduleId);
+        Schedule schedule = scheduleService.findScheduleById(scheduleId);
 
         log.info("유저 및 일정 확인 완료");
 
