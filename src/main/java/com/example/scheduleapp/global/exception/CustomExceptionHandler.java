@@ -1,5 +1,6 @@
 package com.example.scheduleapp.global.exception;
 
+import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
 import com.example.scheduleapp.global.exception.custom.LoginFailedException;
 import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
 import com.example.scheduleapp.global.exception.dto.ErrorResponseDto;
@@ -50,6 +51,16 @@ public class CustomExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handlePasswordException(SignUpFailedException exception){
 
         log.error("HttpStatus.CONFLICT 예외 발생");
+        return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
+    }
+
+
+    /*entity 조회 예외 처리*/
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleEntityNotFoundException(EntityNotFoundException exception){
+
+        log.error("HttpStatus.NOT_FOUND 예외 발생");
         return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
     }
 }

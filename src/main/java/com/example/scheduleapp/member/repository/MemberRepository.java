@@ -13,8 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     /*이메일을 통해 등록된 유저 찾기*/
     Optional<Member> findUserByEmail(String email);
 
-    default Member findUserByIdOrElseThrow(Long id){
-        return findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
+    /*고유 식별자를 통해 유저 찾기*/
+    Optional<Member> findUserById(Long id);
 
 }

@@ -1,5 +1,6 @@
 package com.example.scheduleapp.schedule.service;
 
+import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.dto.response.SchedulePageResponseDto;
 import com.example.scheduleapp.schedule.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.member.entity.Member;
@@ -27,7 +28,7 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final MemberRepository memberRepository;
+    private final MemberServiceImpl memberService;
     private final CommentRepository commentRepository;
 
     @Override
@@ -35,7 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponseDto creatSchedule(Long id, String title, String contents) {
 
         //유저가 있어야 일정이 존재할 수 있다.
-        Member member = memberRepository.findUserByIdOrElseThrow(id);
+        Member member = memberService.getUserById(id);
         Schedule schedule = new Schedule(title, contents);
         schedule.setMember(member);
 

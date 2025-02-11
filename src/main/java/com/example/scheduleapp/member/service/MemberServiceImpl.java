@@ -2,6 +2,7 @@ package com.example.scheduleapp.member.service;
 
 import com.example.scheduleapp.global.config.PasswordEncoder;
 import com.example.scheduleapp.global.exception.ErrorCode;
+import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
 import com.example.scheduleapp.global.exception.custom.LoginFailedException;
 import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
 import com.example.scheduleapp.member.dto.response.MemberResponseDto;
@@ -34,7 +35,7 @@ public class MemberServiceImpl{
             throw new SignUpFailedException(ErrorCode.CONFLICT);
         }
 
-        //비밀번호 암호화
+        /*비밀번호 암호화*/
         String encodePassword = passwordEncoder.encode(password);
         Member user = new Member(username, email, encodePassword);
 
@@ -42,6 +43,7 @@ public class MemberServiceImpl{
 
         log.info("유저 저장 성공");
 
+        //todo: 날짜 출력 변경하기
         return new MemberResponseDto(
                 savedUser.getId(),
                 savedUser.getUsername(),
@@ -51,20 +53,16 @@ public class MemberServiceImpl{
     }
 
     public MemberResponseDto findUserById(Long id) {
-        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
 
-        /*조회 되는 유저가 없는 경우 NOT_FOUNT 예외처리*/
-        if(findUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
+        /*객체 조회*/
+        Member userById = getUserById(id);
         log.info("특정 유저 조회 성공");
 
         return new MemberResponseDto(
-                findUser.getId(),
-                findUser.getUsername(),
-                localDateTimeFormat(findUser.getCreatedAt()),
-                localDateTimeFormat(findUser.getUpdatedAt())
+                userById.getId(),
+                userById.getUsername(),
+                localDateTimeFormat(userById.getCreatedAt()),
+                localDateTimeFormat(userById.getUpdatedAt())
         );
     }
 
@@ -94,7 +92,8 @@ public class MemberServiceImpl{
 
     @Transactional
     public void updateUserEmail(Long id, String password, String newEmail) {
-        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
+        /*객체 조회*/
+        Member findUser = getUserById(id);
 
         //비밀번호 확인
         boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
@@ -109,7 +108,9 @@ public class MemberServiceImpl{
 
     @Transactional
     public void updateUserPassword(Long id, String oldPassword, String newPassword) {
-        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
+        /*객체 조회*/
+        Member findUser = getUserById(id);
+
         log.info("유저 조회 성공");
 
         //비밀번호 확인
@@ -127,7 +128,8 @@ public class MemberServiceImpl{
 
     @Transactional
     public void deleteUser(Long id, String password) {
-        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
+        /*객체 조회*/
+        Member findUser = getUserById(id);
 
         //비밀번호 확인
         boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
@@ -142,6 +144,17 @@ public class MemberServiceImpl{
 
     private String localDateTimeFormat(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    public Member getUserById(Long id) {
+        Optional<Member> findUserById = memberRepository.findUserById(id);
+
+        /*조회 되는 객체가 없는 경우 NOT_FOUNT 예외처리*/
+        if(findUserById.isEmpty()) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
+        }
+
+        return findUserById.get();
     }
 }
 

@@ -3,6 +3,7 @@ package com.example.scheduleapp.comment.service;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.entity.Comment;
 import com.example.scheduleapp.member.entity.Member;
+import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
 import com.example.scheduleapp.member.repository.MemberRepository;
@@ -24,7 +25,7 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     //Service가 있어야 한다.
-    private final MemberRepository memberRepository;
+    private final MemberServiceImpl memberService;
     private final ScheduleRepository scheduleRepository;
     private final CommentRepository commentRepository;
 
@@ -32,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponseDto createComment(Long scheduleId, Long httpSessionId, String content) {
         //유저와 일정이 모두 있어야 댓글이 존재할 수 있다. (또한 유저는 일정을 선택하여 댓글 등록을 할 수 있다.)
-        Member member = memberRepository.findUserByIdOrElseThrow(httpSessionId);
+        Member member = memberService.getUserById(httpSessionId);
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(scheduleId);
 
         log.info("유저 및 일정 확인 완료");
