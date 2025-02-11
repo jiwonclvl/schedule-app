@@ -92,7 +92,7 @@ public class MemberServiceImpl{
 
     /*이메일 수정*/
     @Transactional
-    public String updateUserEmail(Long id, String password, String newEmail) {
+    public void updateUserEmail(Long id, String password, String newEmail) {
         /*객체 조회*/
         Member findUser = getUserByIdOrElseThrow(id);
 
@@ -102,16 +102,17 @@ public class MemberServiceImpl{
         /*입력한 이메일이 기존 이메일과 동일하지 않은 경우*/
         if(!findUser.getEmail().equals(newEmail)) {
             findUser.updateEmail(newEmail);
-            return "이메일이 성공적으로 변경되었습니다.";
         }
 
-        /*입력한 이메일이 기존 이메일과 동일*/
-        return "기존 이메일과 동일합니다.";
+        /*입력한 이메일이 기존 이메일과 동일
+        예외 커스텀 하기 return "기존 이메일과 동일합니다.";
+        */
+
     }
 
     /*비밀번호 수정*/
     @Transactional
-    public String updateUserPassword(Long id, String oldPassword, String newPassword) {
+    public void updateUserPassword(Long id, String oldPassword, String newPassword) {
         /*객체 조회*/
         Member findUser = getUserByIdOrElseThrow(id);
 
@@ -123,11 +124,12 @@ public class MemberServiceImpl{
             //비밀번호 암호화
             String encodePassword = passwordEncoder.encode(newPassword);
             findUser.updatePassword(encodePassword);
-            return "비밀번호가 성공적으로 변경되었습니다.";
         }
 
-        /*입력한 이메일이 기존 이메일과 동일*/
-        return "기존 비밀번호와 동일합니다.";
+        /*입력한 이메일이 기존 이메일과 동일
+        예외 처리 커스텀 하기 -> return "기존 비밀번호와 동일합니다.";
+        * */
+
     }
 
     /*todo: 유저 삭제 시 전체 삭제 구현하기*/

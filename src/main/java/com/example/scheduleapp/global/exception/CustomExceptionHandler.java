@@ -1,6 +1,7 @@
 package com.example.scheduleapp.global.exception;
 
 import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
+import com.example.scheduleapp.global.exception.custom.ForbiddenException;
 import com.example.scheduleapp.global.exception.custom.PasswordException;
 import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
 import com.example.scheduleapp.global.exception.dto.ErrorResponseDto;
@@ -46,6 +47,14 @@ public class CustomExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleEntityNotFoundException(EntityNotFoundException exception){
 
         log.error("HttpStatus.NOT_FOUND 예외 발생");
+        return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
+    }
+
+    /*권한이 없는 경우*/
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponseDto> handleForbiddenException(ForbiddenException exception){
+        log.error("HttpStatus.FORBIDDEN 예외 발생");
         return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
     }
 
