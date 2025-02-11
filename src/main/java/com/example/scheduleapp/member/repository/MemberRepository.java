@@ -9,13 +9,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    /*이메일을 통해 등록된 유저 찾기*/
     Optional<Member> findUserByEmail(String email);
 
     default Member findUserByIdOrElseThrow(Long id){
         return findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    default Member findUserByEmailOrElseThrow(String email) {
-        return findUserByEmail(email).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
 }

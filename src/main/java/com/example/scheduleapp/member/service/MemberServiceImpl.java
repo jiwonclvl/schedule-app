@@ -2,7 +2,7 @@ package com.example.scheduleapp.member.service;
 
 import com.example.scheduleapp.global.config.PasswordEncoder;
 import com.example.scheduleapp.global.exception.ErrorCode;
-import com.example.scheduleapp.global.exception.custom.PasswordException;
+import com.example.scheduleapp.global.exception.custom.LoginFailedException;
 import com.example.scheduleapp.member.dto.response.MemberResponseDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.repository.MemberRepository;
@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -62,18 +63,26 @@ public class MemberServiceImpl{
 
     @Transactional
     public Long findUserByEmailAndPassword(String email, String password) {
-        Member findUser = memberRepository.findUserByEmailOrElseThrow(email);
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
+        Optional<Member> userByEmail = memberRepository.findUserByEmail(email);
 
-        if (findUser.getEmail().equals(email) && passwordMatch) {
-            log.info("로그인 성공");
-            return findUser.getId();
+        /*이메일 검증*/
+        if(userByEmail.isEmpty()) {
+            throw new LoginFailedException(ErrorCode.UNAUTHORIZED);
         }
 
-        throw new PasswordException(ErrorCode.UNAUTHORIZED);
+        /*유저가 존재하는 경우 (즉, 이메일 검증이 통과된 경우)*/
+        Member member = userByEmail.get();
 
+        /*비밀번호 검증*/
+        boolean passwordMatch = passwordEncoder.matches(password, member.getPassword());
+
+        if(!passwordMatch) {
+            throw new LoginFailedException(ErrorCode.UNAUTHORIZED);
+        }
+
+        log.info("로그인 성공");
+        return member.getId();
     }
 
     @Transactional
