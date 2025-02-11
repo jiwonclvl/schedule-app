@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findUserByEmail(String email);
 
-    default Member findUserByIdOrElseThrow(Long id) {
+    default Member findUserByIdOrElseThrow(Long id){
         return findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

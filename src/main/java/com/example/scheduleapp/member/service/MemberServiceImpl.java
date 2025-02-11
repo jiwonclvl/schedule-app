@@ -1,6 +1,8 @@
 package com.example.scheduleapp.member.service;
 
 import com.example.scheduleapp.global.config.PasswordEncoder;
+import com.example.scheduleapp.global.exception.ErrorCode;
+import com.example.scheduleapp.global.exception.custom.PasswordException;
 import com.example.scheduleapp.member.dto.response.MemberResponseDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.repository.MemberRepository;
@@ -17,11 +19,10 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
-    private final MemberRepository userRepository;
+public class MemberServiceImpl{
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
     @Transactional
     public MemberResponseDto createUser(String username, String email, String password) {
 
@@ -29,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
         String encodePassword = passwordEncoder.encode(password);
         Member user = new Member(username, email, encodePassword);
 
-        Member savedUser = userRepository.save(user);
+        Member savedUser = memberRepository.save(user);
 
         log.info("유저 저장 성공");
 
@@ -41,9 +42,14 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
-    @Override
     public MemberResponseDto findUserById(Long id) {
-        Member findUser = userRepository.findUserByIdOrElseThrow(id);
+        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
+
+        /*조회 되는 유저가 없는 경우 NOT_FOUNT 예외처리*/
+        if(findUser == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
         log.info("특정 유저 조회 성공");
 
         return new MemberResponseDto(
@@ -54,10 +60,9 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
-    @Override
     @Transactional
     public Long findUserByEmailAndPassword(String email, String password) {
-        Member findUser = userRepository.findUserByEmailOrElseThrow(email);
+        Member findUser = memberRepository.findUserByEmailOrElseThrow(email);
 
         //비밀번호 확인
         boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
@@ -67,14 +72,13 @@ public class MemberServiceImpl implements MemberService {
             return findUser.getId();
         }
 
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        throw new PasswordException(ErrorCode.UNAUTHORIZED);
 
     }
 
-    @Override
     @Transactional
     public void updateUserEmail(Long id, String password, String newEmail) {
-        Member findUser = userRepository.findUserByIdOrElseThrow(id);
+        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
         log.info("유저 조회 성공");
 
         //비밀번호 확인
@@ -88,10 +92,9 @@ public class MemberServiceImpl implements MemberService {
         log.info("유저 이메일 수정 성공");
     }
 
-    @Override
     @Transactional
     public void updateUserPassword(Long id, String oldPassword, String newPassword) {
-        Member findUser = userRepository.findUserByIdOrElseThrow(id);
+        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
         log.info("유저 조회 성공");
 
         //비밀번호 확인
@@ -107,10 +110,9 @@ public class MemberServiceImpl implements MemberService {
         log.info("유저 비밀번호 수정 성공");
     }
 
-    @Override
     @Transactional
     public void deleteUser(Long id, String password) {
-        Member findUser = userRepository.findUserByIdOrElseThrow(id);
+        Member findUser = memberRepository.findUserByIdOrElseThrow(id);
         log.info("유저 조회 성공");
 
         //비밀번호 확인
@@ -120,7 +122,7 @@ public class MemberServiceImpl implements MemberService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
-        userRepository.delete(findUser);
+        memberRepository.delete(findUser);
         log.info("유저 삭제 성공");
     }
 

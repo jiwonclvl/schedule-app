@@ -1,7 +1,7 @@
 package com.example.scheduleapp.member.controller;
 
 import com.example.scheduleapp.member.dto.request.LoginRequestDto;
-import com.example.scheduleapp.member.service.MemberService;
+import com.example.scheduleapp.member.service.MemberServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
 
     @PostMapping
     public ResponseEntity<Void> login(
