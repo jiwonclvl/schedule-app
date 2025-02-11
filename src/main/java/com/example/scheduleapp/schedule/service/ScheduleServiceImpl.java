@@ -1,11 +1,11 @@
 package com.example.scheduleapp.schedule.service;
 
+import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.dto.response.SchedulePageResponseDto;
 import com.example.scheduleapp.schedule.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
-import com.example.scheduleapp.member.repository.MemberRepository;
 import com.example.scheduleapp.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final MemberRepository memberRepository;
+    private final MemberServiceImpl memberService;
     private final CommentRepository commentRepository;
 
     @Override
@@ -35,7 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponseDto creatSchedule(Long id, String title, String contents) {
 
         //유저가 있어야 일정이 존재할 수 있다.
-        Member member = memberRepository.findUserByIdOrElseThrow(id);
+        Member member = memberService.getUserByIdOrElseThrow(id);
         Schedule schedule = new Schedule(title, contents);
         schedule.setMember(member);
 
@@ -116,7 +116,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         } */
 
         //todo: 여러 사용자의 일정이 등록되어 있는 경우 다른 사용자의 수정을 하려고 하면 예외 처리해야함
-
         findschedule.updateTitle(title);
         findschedule.updateContents(contents);
 

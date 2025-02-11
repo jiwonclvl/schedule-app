@@ -7,12 +7,12 @@ import lombok.Getter;
 @Getter
 public class UpdateMemberEmailRequestDto {
 
-    @NotBlank
+    @NotBlank (message = "비밀번호를 입력해주세요")
     private final String password;
 
     //변경할 이메일
-    @NotBlank
-    @Email
+    @NotBlank (message = "이메일을 입력해주세요")
+    @Email (message = "이메일 형식이 맞지 않습니다.")
     private final String newEmail;
 
     public UpdateMemberEmailRequestDto(String password, String newEmail) {

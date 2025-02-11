@@ -3,9 +3,9 @@ package com.example.scheduleapp.comment.service;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.entity.Comment;
 import com.example.scheduleapp.member.entity.Member;
+import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
-import com.example.scheduleapp.member.repository.MemberRepository;
 import com.example.scheduleapp.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     //Service가 있어야 한다.
-    private final MemberRepository memberRepository;
+    private final MemberServiceImpl memberService;
     private final ScheduleRepository scheduleRepository;
     private final CommentRepository commentRepository;
 
@@ -32,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponseDto createComment(Long scheduleId, Long httpSessionId, String content) {
         //유저와 일정이 모두 있어야 댓글이 존재할 수 있다. (또한 유저는 일정을 선택하여 댓글 등록을 할 수 있다.)
-        Member member = memberRepository.findUserByIdOrElseThrow(httpSessionId);
+        Member member = memberService.getUserByIdOrElseThrow(httpSessionId);
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(scheduleId);
 
         log.info("유저 및 일정 확인 완료");
@@ -56,6 +56,18 @@ public class CommentServiceImpl implements CommentService {
 
     //todo: 댓글의 날짜 출력 형식 변경하기
     @Override
+    @Transactional
+    public void updateComment(Long commentId, String comment) {
+        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
+
+        //todo: 입력한 댓글이 비어있다면 기존 값 유지
+        //댓글 수정
+        findComment.updateComment(comment);
+
+        log.info("댓글 수정 완료");
+    }
+
+    @Override
     public List<CommentResponseDto> getComments() {
         List<CommentResponseDto> commentList = commentRepository.findAll()
                 .stream()
@@ -69,18 +81,6 @@ public class CommentServiceImpl implements CommentService {
         log.info("댓글 조회 완료");
 
         return commentList;
-    }
-
-    @Override
-    @Transactional
-    public void updateComment(Long commentId, String comment) {
-        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
-
-        //todo: 입력한 댓글이 비어있다면 기존 값 유지
-        //댓글 수정
-        findComment.updateComment(comment);
-
-        log.info("댓글 수정 완료");
     }
 
     @Override
