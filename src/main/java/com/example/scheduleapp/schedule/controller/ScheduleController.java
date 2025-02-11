@@ -36,7 +36,7 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기
+    //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기 --> URI 부분 이름 변경
     @GetMapping
     public ResponseEntity<List<SchedulePageResponseDto>> getSchedules(
             @RequestParam(defaultValue = "0") int page,
@@ -47,6 +47,7 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.getSchedules(page,pageSize), HttpStatus.OK);
     }
 
+    //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기 --> URI 부분 이름 변경
     @GetMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long scheduleId) {
         log.info("일정 단건 조회 API 호출");

@@ -1,5 +1,7 @@
 package com.example.scheduleapp.schedule.service;
 
+import com.example.scheduleapp.global.exception.ErrorCode;
+import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.dto.response.SchedulePageResponseDto;
 import com.example.scheduleapp.schedule.dto.response.ScheduleResponseDto;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -53,8 +56,8 @@ public class ScheduleServiceImpl{
         );
     }
 
-    //todo: 일정 조회 부분은 로그인 하지 않아도 볼 수 있도록 하고 싶음 (URI 변경 후 적용)
     //todo: 일정 조회 시 날짜 출력 형식 변경하기
+    //todo: 댓글 수정 후 수정하기
     public List<SchedulePageResponseDto> getSchedules(int page, int pageSize) {
 
         //페이지 객체 생성
@@ -79,24 +82,24 @@ public class ScheduleServiceImpl{
         return schedulePagelist;
     }
 
-    public ScheduleResponseDto getSchedule(Long ScheduleId) {
-        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(ScheduleId);
+    public ScheduleResponseDto getSchedule(Long scheduleId) {
+        Schedule schedule = findScheduleById(scheduleId);
 
         log.info("일정 단건 조회 성공");
 
         return new ScheduleResponseDto(
-                findschedule.getId(),
-                findschedule.getMember().getUsername(),
-                findschedule.getTitle(),
-                findschedule.getContents(),
-                localDateTimeFormat(findschedule.getCreatedAt()),
-                localDateTimeFormat(findschedule.getUpdatedAt())
+                schedule.getId(),
+                schedule.getMember().getUsername(),
+                schedule.getTitle(),
+                schedule.getContents(),
+                localDateTimeFormat(schedule.getCreatedAt()),
+                localDateTimeFormat(schedule.getUpdatedAt())
         );
     }
 
     @Transactional
     public ScheduleResponseDto updateSchedule(Long scheduleId, String title, String contents) {
-        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(scheduleId);
+        Schedule schedule = findScheduleById(scheduleId);
 
         /* todo: 예외처리 추가하기
         //둘 다 비어 있는 경우 기존 값 유지
@@ -113,33 +116,40 @@ public class ScheduleServiceImpl{
         } */
 
         //todo: 여러 사용자의 일정이 등록되어 있는 경우 다른 사용자의 수정을 하려고 하면 예외 처리해야함
-        findschedule.updateTitle(title);
-        findschedule.updateContents(contents);
-
-        System.out.println("findschedule.getTitle() = " + findschedule.getTitle());
-        System.out.println("findschedule.getContent() = " + findschedule.getContents());
+        schedule.updateTitle(title);
+        schedule.updateContents(contents);
 
         log.info("일정 수정 조회 성공");
 
         return new ScheduleResponseDto(
-                findschedule.getId(),
-                findschedule.getMember().getUsername(),
-                findschedule.getTitle(),
-                findschedule.getContents(),
-                localDateTimeFormat(findschedule.getCreatedAt()),
-                localDateTimeFormat(findschedule.getUpdatedAt())
+                schedule.getId(),
+                schedule.getMember().getUsername(),
+                schedule.getTitle(),
+                schedule.getContents(),
+                localDateTimeFormat(schedule.getCreatedAt()),
+                localDateTimeFormat(schedule.getUpdatedAt())
         );
     }
 
     @Transactional
-    public void deleteSchedule(Long ScheduleId) {
-        Schedule findschedule = scheduleRepository.findByIdOrElseThrow(ScheduleId);
-        scheduleRepository.delete(findschedule);
+    public void deleteSchedule(Long scheduleId) {
+
+        Schedule schedule = findScheduleById(scheduleId);
+        scheduleRepository.delete(schedule);
 
         log.info("일정 삭제 조회 성공");
     }
 
+    private Schedule findScheduleById(Long scheduleId) {
+        Optional<Schedule> findScheduleById = scheduleRepository.findById(scheduleId);
 
+        /*일정이 없는 경우 예외*/
+        if(findScheduleById.isEmpty()) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
+        }
+
+        return findScheduleById.get();
+    }
     private String localDateTimeFormat(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }

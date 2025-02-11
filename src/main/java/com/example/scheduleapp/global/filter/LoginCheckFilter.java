@@ -19,7 +19,8 @@ public class LoginCheckFilter implements Filter {
             "/login",
             "/logout",
             "/members/signup",
-            "/schedules/comments"
+            "/schedules/comments",
+            "/schedules"
     };
 
     @Override

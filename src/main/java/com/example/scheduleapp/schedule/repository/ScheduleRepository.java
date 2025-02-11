@@ -8,11 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
-    default Schedule findByIdOrElseThrow(Long scheduleId) {
-        return findById(scheduleId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다."));
-    }
+    /*일정 고유 식별자를 통해 일정 조회*/
+    Optional<Schedule> findById(Long scheduleId);
 
+    /*페이징*/
     Page<Schedule> findAll(Pageable pageable);
 }
