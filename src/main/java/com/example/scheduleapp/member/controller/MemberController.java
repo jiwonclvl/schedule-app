@@ -22,7 +22,7 @@ public class MemberController {
 
     private final MemberServiceImpl memberService;
 
-    //todo: 이미 존재하는 이메일인 경우 메세지 출력하기
+
     @PostMapping("/signup")
     public ResponseEntity<MemberResponseDto> createUser(
             @Validated @RequestBody MemberRequestDto dto

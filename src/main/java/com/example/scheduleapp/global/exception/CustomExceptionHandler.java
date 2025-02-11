@@ -1,6 +1,7 @@
 package com.example.scheduleapp.global.exception;
 
 import com.example.scheduleapp.global.exception.custom.LoginFailedException;
+import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
 import com.example.scheduleapp.global.exception.dto.ErrorResponseDto;
 import com.example.scheduleapp.global.exception.dto.ValidationErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -41,5 +42,14 @@ public class CustomExceptionHandler {
 
         return ValidationErrorResponseDto.validationErrorResponse(exception.getStatusCode(), fieldErrorList);
 
+    }
+
+    /*회원 가입 예외 처리*/
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(SignUpFailedException.class)
+    public ResponseEntity<ErrorResponseDto> handlePasswordException(SignUpFailedException exception){
+
+        log.error("HttpStatus.CONFLICT 예외 발생");
+        return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
     }
 }
