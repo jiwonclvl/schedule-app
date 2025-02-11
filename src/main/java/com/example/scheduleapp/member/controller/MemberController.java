@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.scheduleapp.global.SuccessResponseDto.successCreateResponse;
+
 @Slf4j
 @RestController
 @RequestMapping("/members")
@@ -24,11 +26,12 @@ public class MemberController {
     private final MemberServiceImpl memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberResponseDto> createUser(
+    public ResponseEntity<SuccessResponseDto> createUser(
             @Validated @RequestBody MemberRequestDto dto
     ) {
         log.info("회원가입 API 호출");
-        return new ResponseEntity<>(memberService.createUser(dto.getUsername(),dto.getEmail(), dto.getPassword()), HttpStatus.OK);
+        MemberResponseDto user = memberService.createUser(dto.getUsername(), dto.getEmail(), dto.getPassword());
+        return successCreateResponse(HttpStatus.CREATED,"회원가입이 완료되었습니다.", user);
     }
 
     @GetMapping("/{userId}")

@@ -13,6 +13,8 @@ public class SuccessResponseDto {
 
     private final Integer status;
 
+    private final MemberResponseDto data;
+
     private final String message;
 
     public static ResponseEntity<SuccessResponseDto> successResponse(String message) {
@@ -23,5 +25,16 @@ public class SuccessResponseDto {
                 .message(message)
                 .build()
         );
+    }
+
+    public static ResponseEntity<SuccessResponseDto> successCreateResponse(HttpStatus status, String message, MemberResponseDto dto) {
+        return ResponseEntity
+                .status(status)
+                .body(SuccessResponseDto.builder()
+                        .status(status.value())
+                        .data(dto)
+                        .message(message)
+                        .build()
+                );
     }
 }

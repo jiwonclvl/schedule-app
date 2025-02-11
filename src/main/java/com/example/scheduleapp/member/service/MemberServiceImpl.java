@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static com.example.scheduleapp.member.dto.response.MemberResponseDto.memberDto;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -45,12 +47,13 @@ public class MemberServiceImpl{
         log.info("유저 저장 성공");
 
         //todo: 날짜 출력 변경하기
-        return new MemberResponseDto(
+        return memberDto(
                 savedUser.getId(),
                 savedUser.getUsername(),
                 localDateTimeFormat(savedUser.getCreatedAt()),
                 localDateTimeFormat(savedUser.getUpdatedAt())
         );
+
     }
 
     /*유저 조회*/
@@ -61,7 +64,7 @@ public class MemberServiceImpl{
 
         log.info("특정 유저 조회 성공");
 
-        return new MemberResponseDto(
+        return memberDto(
                 userById.getId(),
                 userById.getUsername(),
                 localDateTimeFormat(userById.getCreatedAt()),
