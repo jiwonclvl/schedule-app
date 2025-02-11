@@ -1,7 +1,7 @@
 package com.example.scheduleapp.global.exception;
 
 import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
-import com.example.scheduleapp.global.exception.custom.LoginFailedException;
+import com.example.scheduleapp.global.exception.custom.PasswordException;
 import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
 import com.example.scheduleapp.global.exception.dto.ErrorResponseDto;
 import com.example.scheduleapp.global.exception.dto.ValidationErrorResponseDto;
@@ -22,8 +22,8 @@ public class CustomExceptionHandler {
 
     /*로그인 기능 예외처리*/
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(LoginFailedException.class)
-    public ResponseEntity<ErrorResponseDto> handlePasswordException(LoginFailedException exception){
+    @ExceptionHandler(PasswordException.class)
+    public ResponseEntity<ErrorResponseDto> handlePasswordException(PasswordException exception){
 
         log.error("HttpStatus.UNAUTHORIZED 예외 발생");
         return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());

@@ -22,7 +22,6 @@ public class MemberController {
 
     private final MemberServiceImpl memberService;
 
-
     @PostMapping("/signup")
     public ResponseEntity<MemberResponseDto> createUser(
             @Validated @RequestBody MemberRequestDto dto

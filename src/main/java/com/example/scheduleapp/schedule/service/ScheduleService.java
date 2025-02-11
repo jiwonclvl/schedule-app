@@ -21,7 +21,6 @@ public interface ScheduleService {
     public ScheduleResponseDto updateSchedule(Long scheduleId, String title, String contents);
 
     //일정 삭제하기
-
     public void deleteSchedule(Long scheduleId);
 
 }

@@ -117,7 +117,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         } */
 
         //todo: 여러 사용자의 일정이 등록되어 있는 경우 다른 사용자의 수정을 하려고 하면 예외 처리해야함
-
         findschedule.updateTitle(title);
         findschedule.updateContents(contents);
 

@@ -57,6 +57,18 @@ public class CommentServiceImpl implements CommentService {
 
     //todo: 댓글의 날짜 출력 형식 변경하기
     @Override
+    @Transactional
+    public void updateComment(Long commentId, String comment) {
+        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
+
+        //todo: 입력한 댓글이 비어있다면 기존 값 유지
+        //댓글 수정
+        findComment.updateComment(comment);
+
+        log.info("댓글 수정 완료");
+    }
+
+    @Override
     public List<CommentResponseDto> getComments() {
         List<CommentResponseDto> commentList = commentRepository.findAll()
                 .stream()
@@ -70,18 +82,6 @@ public class CommentServiceImpl implements CommentService {
         log.info("댓글 조회 완료");
 
         return commentList;
-    }
-
-    @Override
-    @Transactional
-    public void updateComment(Long commentId, String comment) {
-        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
-
-        //todo: 입력한 댓글이 비어있다면 기존 값 유지
-        //댓글 수정
-        findComment.updateComment(comment);
-
-        log.info("댓글 수정 완료");
     }
 
     @Override

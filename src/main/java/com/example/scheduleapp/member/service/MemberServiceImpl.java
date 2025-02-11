@@ -3,7 +3,7 @@ package com.example.scheduleapp.member.service;
 import com.example.scheduleapp.global.config.PasswordEncoder;
 import com.example.scheduleapp.global.exception.ErrorCode;
 import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
-import com.example.scheduleapp.global.exception.custom.LoginFailedException;
+import com.example.scheduleapp.global.exception.custom.PasswordException;
 import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
 import com.example.scheduleapp.member.dto.response.MemberResponseDto;
 import com.example.scheduleapp.member.entity.Member;
@@ -25,6 +25,7 @@ public class MemberServiceImpl{
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /*유저 등록 (회원 가입)*/
     @Transactional
     public MemberResponseDto createUser(String username, String email, String password) {
 
@@ -52,6 +53,7 @@ public class MemberServiceImpl{
         );
     }
 
+    /*유저 조회*/
     public MemberResponseDto findUserById(Long id) {
 
         /*객체 조회*/
@@ -66,6 +68,7 @@ public class MemberServiceImpl{
         );
     }
 
+    /*비밀번호와 이메일을 통한 로그인*/
     @Transactional
     public Long findUserByEmailAndPassword(String email, String password) {
 
@@ -73,39 +76,33 @@ public class MemberServiceImpl{
 
         /*이메일 검증*/
         if(userByEmail.isEmpty()) {
-            throw new LoginFailedException(ErrorCode.UNAUTHORIZED);
+            throw new PasswordException(ErrorCode.UNAUTHORIZED);
         }
 
         /*유저가 존재하는 경우 (즉, 이메일 검증이 통과된 경우)*/
         Member member = userByEmail.get();
 
-        /*비밀번호 검증*/
-        boolean passwordMatch = passwordEncoder.matches(password, member.getPassword());
-
-        if(!passwordMatch) {
-            throw new LoginFailedException(ErrorCode.UNAUTHORIZED);
-        }
+        /*비밀번호 처리 메서드 호출*/
+        validationPassword(password, member);
 
         log.info("로그인 성공");
         return member.getId();
     }
 
+    /*이메일 수정*/
     @Transactional
     public void updateUserEmail(Long id, String password, String newEmail) {
         /*객체 조회*/
         Member findUser = getUserById(id);
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
-
-        if(!passwordMatch) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
-        }
+        /*비밀번호 처리 메서드 호출*/
+        validationPassword(password, findUser);
 
         findUser.updateEmail(newEmail);
         log.info("유저 이메일 수정 성공");
     }
 
+    /*비밀번호 수정*/
     @Transactional
     public void updateUserPassword(Long id, String oldPassword, String newPassword) {
         /*객체 조회*/
@@ -113,12 +110,8 @@ public class MemberServiceImpl{
 
         log.info("유저 조회 성공");
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(oldPassword, findUser.getPassword());
-
-        if(!passwordMatch) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
-        }
+        /*비밀번호 처리 메서드 호출*/
+        validationPassword(oldPassword, findUser);
 
         //비밀번호 암호화
         String encodePassword = passwordEncoder.encode(newPassword);
@@ -130,6 +123,9 @@ public class MemberServiceImpl{
     public void deleteUser(Long id, String password) {
         /*객체 조회*/
         Member findUser = getUserById(id);
+
+        /*비밀번호 처리 메서드 호출*/
+        validationPassword(password, findUser);
 
         //비밀번호 확인
         boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
@@ -155,6 +151,16 @@ public class MemberServiceImpl{
         }
 
         return findUserById.get();
+    }
+
+    private void validationPassword(String password, Member member) {
+        //비밀번호 확인
+        boolean passwordMatch = passwordEncoder.matches(password, member.getPassword());
+
+        /*비밀번호 검증*/
+        if(!passwordMatch) {
+            throw new PasswordException(ErrorCode.UNAUTHORIZED);
+        }
     }
 }
 
