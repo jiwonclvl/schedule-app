@@ -137,15 +137,13 @@ public class MemberServiceImpl{
 
     /*todo: 유저 삭제 시 전체 삭제 구현하기*/
     @Transactional
-    public String deleteUser(Long id, String password) {
+    public void deleteUser(Long id, String password) {
         /*객체 조회*/
         Member findUser = getUserByIdOrElseThrow(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
-
         memberRepository.delete(findUser);
-        return "유저가 삭제 되었습니다.";
     }
 
     private String localDateTimeFormat(LocalDateTime dateTime) {
