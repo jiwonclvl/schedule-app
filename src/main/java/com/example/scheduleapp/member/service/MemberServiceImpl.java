@@ -130,23 +130,17 @@ public class MemberServiceImpl{
         return "기존 비밀번호와 동일합니다.";
     }
 
+    /*todo: 유저 삭제 시 전체 삭제 구현하기*/
     @Transactional
-    public void deleteUser(Long id, String password) {
+    public String deleteUser(Long id, String password) {
         /*객체 조회*/
         Member findUser = getUserByIdOrElseThrow(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
 
-        //비밀번호 확인
-        boolean passwordMatch = passwordEncoder.matches(password, findUser.getPassword());
-
-        if(!passwordMatch) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
-        }
-
         memberRepository.delete(findUser);
-        log.info("유저 삭제 성공");
+        return "유저가 삭제 되었습니다.";
     }
 
     private String localDateTimeFormat(LocalDateTime dateTime) {

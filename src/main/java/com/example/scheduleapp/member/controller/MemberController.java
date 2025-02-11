@@ -57,17 +57,14 @@ public class MemberController {
         return SuccessResponseDto.successResponse(message);
     }
 
-    //todo: 유저 삭제 시 모든 일정과 댓글 --> 남겨두기 (delete 후 완전 삭제가 아닌 delete 여부 값을 추가하여 물리적으로만 클라이언트에게 삭제 된 것처럼 보이게 하기)
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Void> deleteUser(
+    public ResponseEntity<SuccessResponseDto> deleteUser(
             @PathVariable Long userId,
             @Validated @RequestBody DeleteMemberRequestDto dto
     ) {
         log.info("유저 삭제 API 호출");
-        memberService.deleteUser(userId, dto.getPassword());
+        String message = memberService.deleteUser(userId, dto.getPassword());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return SuccessResponseDto.successResponse(message);
     }
-
-
 }
