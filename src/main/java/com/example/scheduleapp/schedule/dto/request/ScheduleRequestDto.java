@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class ScheduleRequestDto {
 
-    @NotBlank
+    @NotBlank (message = "제목을 입력해주세요")
     private final String title;
 
     private final String contents;

@@ -43,8 +43,8 @@ public class MemberController {
             @Validated @RequestBody UpdateMemberEmailRequestDto dto
     ) {
         log.info("유저 이메일 수정 API 호출");
-        String message = memberService.updateUserEmail(userId, dto.getPassword(), dto.getNewEmail());
-        return SuccessResponseDto.successResponse(message);
+        memberService.updateUserEmail(userId, dto.getPassword(), dto.getNewEmail());
+        return SuccessResponseDto.successResponse("이메일이 성공적으로 변경되었습니다.");
     }
 
     @PatchMapping("/password/{userId}")
@@ -53,8 +53,8 @@ public class MemberController {
             @Validated @RequestBody UpdateMemberPasswordRequestDto dto
     ) {
         log.info("유저 비밀번호 수정 API 호출");
-        String message = memberService.updateUserPassword(userId, dto.getOldPassword(), dto.getNewPassword());
-        return SuccessResponseDto.successResponse(message);
+        memberService.updateUserPassword(userId, dto.getOldPassword(), dto.getNewPassword());
+        return SuccessResponseDto.successResponse("비밀번호가 성공적으로 변경되었습니다.");
     }
 
     @DeleteMapping("/delete/{userId}")

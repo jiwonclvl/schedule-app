@@ -24,13 +24,12 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ScheduleServiceImpl implements ScheduleService {
+public class ScheduleServiceImpl{
 
     private final ScheduleRepository scheduleRepository;
     private final MemberServiceImpl memberService;
     private final CommentRepository commentRepository;
 
-    @Override
     @Transactional
     public ScheduleResponseDto creatSchedule(Long id, String title, String contents) {
 
@@ -39,6 +38,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = new Schedule(title, contents);
         schedule.setMember(member);
 
+        /*일정 등록*/
         Schedule saveSchedule = scheduleRepository.save(schedule);
 
         log.info("일정 등록 성공");
@@ -55,7 +55,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     //todo: 일정 조회 부분은 로그인 하지 않아도 볼 수 있도록 하고 싶음 (URI 변경 후 적용)
     //todo: 일정 조회 시 날짜 출력 형식 변경하기
-    @Override
     public List<SchedulePageResponseDto> getSchedules(int page, int pageSize) {
 
         //페이지 객체 생성
@@ -80,7 +79,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedulePagelist;
     }
 
-    @Override
     public ScheduleResponseDto getSchedule(Long ScheduleId) {
         Schedule findschedule = scheduleRepository.findByIdOrElseThrow(ScheduleId);
 
@@ -96,7 +94,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
-    @Override
     @Transactional
     public ScheduleResponseDto updateSchedule(Long scheduleId, String title, String contents) {
         Schedule findschedule = scheduleRepository.findByIdOrElseThrow(scheduleId);
@@ -134,7 +131,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
-    @Override
     @Transactional
     public void deleteSchedule(Long ScheduleId) {
         Schedule findschedule = scheduleRepository.findByIdOrElseThrow(ScheduleId);

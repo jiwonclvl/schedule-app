@@ -4,7 +4,7 @@ import com.example.scheduleapp.schedule.dto.request.ScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.request.UpdateScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.response.SchedulePageResponseDto;
 import com.example.scheduleapp.schedule.dto.response.ScheduleResponseDto;
-import com.example.scheduleapp.schedule.service.ScheduleService;
+import com.example.scheduleapp.schedule.service.ScheduleServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleController {
 
-    private final ScheduleService scheduleService;
+    private final ScheduleServiceImpl scheduleService;
 
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(
@@ -32,7 +32,8 @@ public class ScheduleController {
 
         //session으로 유저 정보 가져오기
         Long httpSessionId = getHttpSessionId(request);
-        return new ResponseEntity<>(scheduleService.creatSchedule(httpSessionId, dto.getTitle(), dto.getContents()), HttpStatus.OK);
+        scheduleService.creatSchedule(httpSessionId, dto.getTitle(), dto.getContents());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기
