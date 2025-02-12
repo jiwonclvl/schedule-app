@@ -14,7 +14,8 @@ public enum ErrorCode {
     CANNOT_UPDATE_OTHERS_DATA(HttpStatus.FORBIDDEN, "다른 사람의 정보는 수정 및 삭제가 불가능합니다."),
     UNCHANGED_EMAIL(HttpStatus.BAD_REQUEST, "기존과 동일한 이메일입니다."),
     UNCHANGED_PASSWORD(HttpStatus.BAD_REQUEST, "기존과 동일한 비밀번호입니다."),
-    UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "로그인 해주세요.");
+    UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "로그인 해주세요."),
+    NOT_LOGGED_IN(HttpStatus.FORBIDDEN, "현재 로그인 상태가 아닙니다.");
 
     private final HttpStatus errorCode;
     private final String errorMessage;

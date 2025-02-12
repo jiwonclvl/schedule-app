@@ -1,7 +1,8 @@
 package com.example.scheduleapp.member.controller;
 
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
-import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
+import com.example.scheduleapp.global.exception.ErrorCode;
+import com.example.scheduleapp.global.exception.custom.NotLoggedInException;
 import com.example.scheduleapp.global.filter.SessionConst;
 import com.example.scheduleapp.member.dto.request.LoginRequestDto;
 import com.example.scheduleapp.member.entity.Member;
@@ -11,7 +12,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,11 +45,13 @@ public class AuthController {
         log.info("로그아웃 API 호출");
 
         /*세션에 값이 있는 경우*/
-        if(session != null) {
-            /*세션 제거*/
-            session.invalidate();
+        if (session == null) {
+            /*로그인을 하지 않고 로그 아웃을 하는 경우*/
+            throw new NotLoggedInException(ErrorCode.NOT_LOGGED_IN);
         }
 
+        /*세션 제거*/
+        session.invalidate();
         return SuccessResponseDto.successOkResponse("로그아웃에 성공하였습니다.");
     }
 }

@@ -78,6 +78,14 @@ public class CustomExceptionHandler {
         log.error("HttpStatus.FORBIDDEN 예외 발생");
     }
 
+    /*로그인하지 않고 로그아웃을 하려고 할 때*/
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(NotLoggedInException.class)
+    public ResponseEntity<ErrorResponseDto> handleNotLoggedInException(NotLoggedInException exception){
+        log.error("HttpStatus.FORBIDDEN password 예외 발생");
+        return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
+    }
+
     /*검증 데이터가 유효하지 않은 경우*/
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
