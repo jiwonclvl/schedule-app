@@ -1,5 +1,7 @@
 package com.example.scheduleapp.schedule.controller;
 
+import com.example.scheduleapp.global.dto.SuccessWithMemberDataResponseDto;
+import com.example.scheduleapp.global.dto.SuccessWithScheduleDataResponseDto;
 import com.example.scheduleapp.schedule.dto.request.ScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.request.UpdateScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.response.SchedulePageResponseDto;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.scheduleapp.global.dto.SuccessWithScheduleDataResponseDto.successCreateScheduleResponse;
+
 @Slf4j
 @RestController
 @RequestMapping("/schedules")
@@ -24,16 +28,17 @@ public class ScheduleController {
     private final ScheduleServiceImpl scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(
+    public ResponseEntity<SuccessWithScheduleDataResponseDto> createSchedule(
             @RequestBody ScheduleRequestDto dto,
             HttpServletRequest request
     ) {
         log.info("일정 생성 API 호출");
 
-        //session으로 유저 정보 가져오기
+        /*session으로 유저 정보 가져오기*/
         Long httpSessionId = getHttpSessionId(request);
-        scheduleService.creatSchedule(httpSessionId, dto.getTitle(), dto.getContents());
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        ScheduleResponseDto scheduleResponseDto = scheduleService.creatSchedule(httpSessionId, dto.getTitle(), dto.getContents());
+        return successCreateScheduleResponse(HttpStatus.CREATED, "일정이 정상적으로 등록되었습니다.",scheduleResponseDto);
     }
 
     //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기 --> URI 부분 이름 변경
@@ -76,7 +81,6 @@ public class ScheduleController {
         scheduleService.deleteSchedule(scheduleId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     private Long getHttpSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

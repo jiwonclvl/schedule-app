@@ -2,7 +2,7 @@ package com.example.scheduleapp.member.controller;
 
 
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
-import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
+import com.example.scheduleapp.global.dto.SuccessWithMemberDataResponseDto;
 import com.example.scheduleapp.member.dto.request.DeleteMemberRequestDto;
 import com.example.scheduleapp.member.dto.request.MemberRequestDto;
 import com.example.scheduleapp.member.dto.request.UpdateMemberEmailRequestDto;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import static com.example.scheduleapp.global.dto.SuccessResponseDto.successOkResponse;
-import static com.example.scheduleapp.global.dto.SuccessWithDataResponseDto.*;
+import static com.example.scheduleapp.global.dto.SuccessWithMemberDataResponseDto.*;
 
 @Slf4j
 @RestController
@@ -27,17 +27,17 @@ public class MemberController {
     private final MemberServiceImpl memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SuccessWithDataResponseDto> createUser(
+    public ResponseEntity<SuccessWithMemberDataResponseDto> createUser(
             @Validated @RequestBody MemberRequestDto dto
     ) {
         log.info("회원가입 API 호출");
         MemberResponseDto user = memberService.createUser(dto.getUsername(), dto.getEmail(), dto.getPassword());
-        return successCreateResponse(HttpStatus.CREATED,"회원가입이 완료되었습니다.", user);
+        return successCreateMemberResponse(HttpStatus.CREATED,"회원가입이 완료되었습니다.", user);
     }
 
     /*todo: 프로필 조회는 로그인 하지 않아도 조회할 수 있도록 수정해야 한다.*/
     @GetMapping("/{userId}")
-    public ResponseEntity<SuccessWithDataResponseDto> findUser(@PathVariable Long userId) {
+    public ResponseEntity<SuccessWithMemberDataResponseDto> findUser(@PathVariable Long userId) {
         log.info("특정 유저 조회 API 호출");
         MemberResponseDto userById = memberService.findUserById(userId);
         return successOkWithDataResponse(HttpStatus.OK, "유저 조회에 성공하였습니다.",userById);

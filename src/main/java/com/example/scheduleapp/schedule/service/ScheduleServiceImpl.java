@@ -62,7 +62,6 @@ public class ScheduleServiceImpl{
     }
 
     //todo: 일정 조회 시 날짜 출력 형식 변경하기
-    //todo: 댓글 수정 후 수정하기
     public List<SchedulePageResponseDto> getSchedules(int page, int pageSize) {
 
         //페이지 객체 생성
