@@ -3,7 +3,9 @@ package com.example.scheduleapp.comment.controller;
 import com.example.scheduleapp.comment.dto.request.CommentRequestDto;
 import com.example.scheduleapp.comment.dto.request.UpdateCommentRequestDto;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
-import com.example.scheduleapp.comment.service.CommentService;
+import com.example.scheduleapp.comment.service.CommentServiceImpl;
+import com.example.scheduleapp.global.dto.SuccessResponseDto;
+import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
 
     @PostMapping("/{scheduleId}")
-    public ResponseEntity<CommentResponseDto> createComment(
+    public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> createComment(
             @PathVariable Long scheduleId,
             @RequestBody CommentRequestDto dto,
             HttpServletRequest request
@@ -31,30 +33,50 @@ public class CommentController {
         log.info("댓글 생성 API 호출");
         //세션에 담긴 값 넘겨주기 (유저의 id값이 담겨있다.)
         Long httpSessionId = getHttpSessionId(request);
-        return new ResponseEntity<>(commentService.createComment(scheduleId, httpSessionId, dto.getContent()), HttpStatus.OK);
+
+        CommentResponseDto comment = commentService.createComment(scheduleId, httpSessionId, dto.getContent());
+        return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED, "댓글이 등록 되었습니다.", comment);
     }
 
+    /*todo, 로그인 하지 않아도 볼 수 있도록 수정한다.*/
     @GetMapping
-    public ResponseEntity<List<CommentResponseDto>> getComments() {
+    public ResponseEntity<SuccessWithDataResponseDto<List<CommentResponseDto>>> getComments() {
         log.info("댓글 전체 조회 API 호출");
-        return new ResponseEntity<>(commentService.getComments(), HttpStatus.OK);
+        List<CommentResponseDto> comments = commentService.getComments();
+        return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글 전체 조회에 성공하였습니다.", comments);
+    }
+
+    /*todo, 로그인 하지 않아도 볼 수 있도록 수정한다.*/
+    @GetMapping("/{commentId}")
+    public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> getComment(@PathVariable Long commentId) {
+        log.info("댓글 단건 조회 API 호출");
+
+        CommentResponseDto comment = commentService.getComment(commentId);
+        return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글 단건 조회에 성공하였습니다.", comment);
     }
 
     @PatchMapping("/content/{commentId}")
-    public ResponseEntity<Void> updateComment(
+    public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> updateComment(
             @PathVariable Long commentId,
-            @RequestBody UpdateCommentRequestDto dto
+            @RequestBody UpdateCommentRequestDto dto,
+            HttpServletRequest request
     ) {
         log.info("댓글 수정 API 호출");
-        commentService.updateComment(commentId, dto.getContent());
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        Long httpSessionId = getHttpSessionId(request);
+        CommentResponseDto commentResponseDto = commentService.updateComment(httpSessionId, commentId, dto.getContent());
+        return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글이 수정 되었습니다.", commentResponseDto);
     }
 
     @DeleteMapping("/delete/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+    public ResponseEntity<SuccessResponseDto> deleteComment(
+            @PathVariable Long commentId,
+            HttpServletRequest request
+    ) {
         log.info("댓글 삭제 API 호출");
-        commentService.deleteComment(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Long httpSessionId = getHttpSessionId(request);
+        commentService.deleteComment(httpSessionId, commentId);
+        return SuccessResponseDto.successOkResponse("댓글이 삭제 되었습니다.");
     }
 
     private Long getHttpSessionId(HttpServletRequest request) {

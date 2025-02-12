@@ -6,13 +6,11 @@ import com.example.scheduleapp.global.exception.custom.*;
 import com.example.scheduleapp.member.dto.response.MemberResponseDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.repository.MemberRepository;
-import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -59,7 +57,7 @@ public class MemberServiceImpl{
     public MemberResponseDto findUserById(Long id) {
 
         /*객체 조회*/
-        Member userById = getUserByIdOrElseThrow(id);
+        Member userById = getUserById(id);
 
         log.info("특정 유저 조회 성공");
 
@@ -96,7 +94,7 @@ public class MemberServiceImpl{
     @Transactional
     public void updateUserEmail(Long id, String password, String newEmail) {
         /*객체 조회*/
-        Member findUser = getUserByIdOrElseThrow(id);
+        Member findUser = getUserById(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
@@ -113,7 +111,7 @@ public class MemberServiceImpl{
     @Transactional
     public void updateUserPassword(Long id, String oldPassword, String newPassword) {
         /*객체 조회*/
-        Member findUser = getUserByIdOrElseThrow(id);
+        Member findUser = getUserById(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(oldPassword, findUser);
@@ -134,7 +132,7 @@ public class MemberServiceImpl{
     @Transactional
     public void deleteUser(Long id, String password) {
         /*객체 조회*/
-        Member findUser = getUserByIdOrElseThrow(id);
+        Member findUser = getUserById(id);
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
@@ -145,7 +143,7 @@ public class MemberServiceImpl{
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public Member getUserByIdOrElseThrow(Long id) {
+    public Member getUserById(Long id) {
         Optional<Member> findUserById = memberRepository.findUserById(id);
 
         /*조회 되는 객체가 없는 경우 NOT_FOUNT 예외처리*/
