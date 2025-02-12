@@ -31,7 +31,11 @@ public class AuthController {
         Member loginMember = memberService.findUserByEmailAndPassword(dto.getEmail(), dto.getPassword());
 
         /*세션에 값 저장*/
-        request.getSession().setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+
+        /*세션 만료 시간*/
+        session.setMaxInactiveInterval(1800);
         return SuccessResponseDto.successOkResponse("로그인에 성공하였습니다.");
     }
 
@@ -39,7 +43,7 @@ public class AuthController {
     public ResponseEntity<SuccessResponseDto> logout(
             HttpServletRequest request
     ) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         log.info("로그아웃 API 호출");
 
         /*세션에 값이 있는 경우*/
