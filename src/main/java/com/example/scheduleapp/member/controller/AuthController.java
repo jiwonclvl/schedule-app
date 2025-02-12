@@ -34,8 +34,6 @@ public class AuthController {
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
-        /*세션 만료 시간*/
-        session.setMaxInactiveInterval(1800);
         return SuccessResponseDto.successOkResponse("로그인에 성공하였습니다.");
     }
 
