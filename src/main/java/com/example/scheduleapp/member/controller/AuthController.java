@@ -1,32 +1,29 @@
 package com.example.scheduleapp.member.controller;
 
+import com.example.scheduleapp.global.dto.SuccessResponseDto;
+import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import com.example.scheduleapp.global.filter.SessionConst;
 import com.example.scheduleapp.member.dto.request.LoginRequestDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/login")
 @RequiredArgsConstructor
-public class LoginController {
+public class AuthController {
 
     private final MemberServiceImpl memberService;
 
-    @PostMapping
-    public ResponseEntity<Void> login(
+    @PostMapping("/login")
+    public ResponseEntity<SuccessResponseDto> login(
             @Valid @RequestBody LoginRequestDto dto,
             HttpServletRequest request
     ) {
@@ -35,6 +32,22 @@ public class LoginController {
 
         /*세션에 값 저장*/
         request.getSession().setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return SuccessResponseDto.successOkResponse("로그인에 성공하였습니다.");
+    }
+
+    @PatchMapping("/logout")
+    public ResponseEntity<SuccessResponseDto> logout(
+            HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession();
+        log.info("로그아웃 API 호출");
+
+        /*세션에 값이 있는 경우*/
+        if(session != null) {
+            /*세션 제거*/
+            session.invalidate();
+        }
+
+        return SuccessResponseDto.successOkResponse("로그아웃에 성공하였습니다.");
     }
 }
