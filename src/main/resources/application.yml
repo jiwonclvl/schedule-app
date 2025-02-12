@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: schedule-app
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/schedule_db
+    username: root
+    password: Plqafgh12!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
+      timeout: 60s
+
+

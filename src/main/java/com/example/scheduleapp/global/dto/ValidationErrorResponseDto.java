@@ -1,4 +1,4 @@
-package com.example.scheduleapp.global.exception.dto;
+package com.example.scheduleapp.global.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

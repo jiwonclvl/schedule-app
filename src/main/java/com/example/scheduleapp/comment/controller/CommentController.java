@@ -6,6 +6,8 @@ import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.service.CommentServiceImpl;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
+import com.example.scheduleapp.global.filter.SessionConst;
+import com.example.scheduleapp.member.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,8 @@ public class CommentController {
             HttpServletRequest request
     ) {
         log.info("댓글 생성 API 호출");
-        //세션에 담긴 값 넘겨주기 (유저의 id값이 담겨있다.)
-        Long httpSessionId = getHttpSessionId(request);
 
-        CommentResponseDto comment = commentService.createComment(scheduleId, httpSessionId, dto.getContent());
+        CommentResponseDto comment = commentService.createComment(scheduleId, getLoginMemberId(request), dto.getContent());
         return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED, "댓글이 등록 되었습니다.", comment);
     }
 
@@ -63,8 +63,7 @@ public class CommentController {
     ) {
         log.info("댓글 수정 API 호출");
 
-        Long httpSessionId = getHttpSessionId(request);
-        CommentResponseDto commentResponseDto = commentService.updateComment(httpSessionId, commentId, dto.getContent());
+        CommentResponseDto commentResponseDto = commentService.updateComment(getLoginMemberId(request), commentId, dto.getContent());
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글이 수정 되었습니다.", commentResponseDto);
     }
 
@@ -74,13 +73,13 @@ public class CommentController {
             HttpServletRequest request
     ) {
         log.info("댓글 삭제 API 호출");
-        Long httpSessionId = getHttpSessionId(request);
-        commentService.deleteComment(httpSessionId, commentId);
+        commentService.deleteComment(getLoginMemberId(request), commentId);
         return SuccessResponseDto.successOkResponse("댓글이 삭제 되었습니다.");
     }
 
-    private Long getHttpSessionId(HttpServletRequest request) {
+    private Long getLoginMemberId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        return (Long) session.getAttribute("id");
+        Member loginMember = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        return loginMember.getId();
     }
 }

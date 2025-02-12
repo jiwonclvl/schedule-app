@@ -1,8 +1,8 @@
 package com.example.scheduleapp.global.exception;
 
 import com.example.scheduleapp.global.exception.custom.*;
-import com.example.scheduleapp.global.exception.dto.ErrorResponseDto;
-import com.example.scheduleapp.global.exception.dto.ValidationErrorResponseDto;
+import com.example.scheduleapp.global.dto.ErrorResponseDto;
+import com.example.scheduleapp.global.dto.ValidationErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

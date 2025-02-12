@@ -42,6 +42,7 @@ public class MemberController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "유저 조회에 성공하였습니다.",userById);
     }
 
+    /*세션 --> 검증 추가*/
     @PatchMapping("/email/{userId}")
     public ResponseEntity<SuccessResponseDto> updateUserEmail(
             @PathVariable Long userId,
@@ -72,6 +73,4 @@ public class MemberController {
         memberService.deleteUser(userId, dto.getPassword());
         return successOkResponse("유저가 삭제 되었습니다.");
     }
-
-    /*todo: 로그 아웃 기능 추가*/
 }

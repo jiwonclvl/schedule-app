@@ -44,7 +44,7 @@ public class LoginCheckFilter implements Filter {
             //로그인 하지 않고 다른 기능을 수행하려고 할 때
             HttpSession session = httpRequest.getSession(false);
 
-            if(session == null || session.getAttribute(("id")) == null) {
+            if(session == null || session.getAttribute((SessionConst.LOGIN_MEMBER)) == null) {
                 //todo: 현재 서버에러 추후 클라이언트 에러로 바꾸기
                 throw new RuntimeException("로그인 해주세요");
             }

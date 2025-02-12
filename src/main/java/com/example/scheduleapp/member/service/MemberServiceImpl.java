@@ -71,7 +71,7 @@ public class MemberServiceImpl{
 
     /*비밀번호와 이메일을 통한 로그인*/
     @Transactional
-    public Long findUserByEmailAndPassword(String email, String password) {
+    public Member findUserByEmailAndPassword(String email, String password) {
 
         Optional<Member> userByEmail = memberRepository.findUserByEmail(email);
 
@@ -87,7 +87,7 @@ public class MemberServiceImpl{
         validationPassword(password, member);
 
         log.info("로그인 성공");
-        return member.getId();
+        return member;
     }
 
     /*이메일 수정*/
