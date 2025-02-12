@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -113,22 +114,24 @@ public class ScheduleServiceImpl{
         Object id = session.getAttribute("id");
 
         /*로그인한 유저가 수정하려는 일정이 다른 사람의 일정인 경우*/
-        if(userId != id) {
+        if (userId != id) {
             throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }
 
-        //둘 다 변경 된 경우
-        if(!schedule.getTitle().equals(title) &&!schedule.getContents().equals(contents)) {
+        // 둘 다 변경된 경우 (title은 null 고려 X, contents는 null 허용)
+        if (!schedule.getTitle().equals(title) && !Objects.equals(schedule.getContents(), contents)) {
             schedule.updateTitle(title);
             schedule.updateContents(contents);
         }
-        //title만 변경된 경우
-        if(!schedule.getContents().equals(contents)){
-            schedule.updateContents(title);
+
+        // title만 변경된 경우 (null 고려 X)
+        if (!schedule.getTitle().equals(title) && Objects.equals(schedule.getContents(), contents)) {
+            schedule.updateTitle(title);
         }
-        //contents만 변경된 경우
-        if(!schedule.getContents().equals(contents)){
-            schedule.updateContents(title);
+
+        // contents만 변경된 경우 (null 고려 O)
+        if (!Objects.equals(schedule.getContents(), contents) && schedule.getTitle().equals(title)) {
+            schedule.updateContents(contents);
         }
 
         log.info("일정 수정 조회 성공");
