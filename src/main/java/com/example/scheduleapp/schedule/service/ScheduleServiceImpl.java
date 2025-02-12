@@ -68,7 +68,10 @@ public class ScheduleServiceImpl{
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("updatedAt").descending());
         Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
 
-        /*응답 static으로 변경*/
+        if (schedulePage.isEmpty()) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
+        }
+
         List<SchedulePageResponseDto> schedulePagelist = schedulePage.getContent().stream()
                 .map(schedule -> {
                     Long totalComment = commentRepository.countByScheduleId(schedule.getId());

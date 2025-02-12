@@ -1,7 +1,6 @@
 package com.example.scheduleapp.schedule.controller;
 
-import com.example.scheduleapp.global.dto.SuccessWithMemberDataResponseDto;
-import com.example.scheduleapp.global.dto.SuccessWithScheduleDataResponseDto;
+import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import com.example.scheduleapp.schedule.dto.request.ScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.request.UpdateScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.response.SchedulePageResponseDto;
@@ -9,6 +8,7 @@ import com.example.scheduleapp.schedule.dto.response.ScheduleResponseDto;
 import com.example.scheduleapp.schedule.service.ScheduleServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.scheduleapp.global.dto.SuccessWithScheduleDataResponseDto.successCreateScheduleResponse;
 
 @Slf4j
 @RestController
@@ -28,8 +27,8 @@ public class ScheduleController {
     private final ScheduleServiceImpl scheduleService;
 
     @PostMapping
-    public ResponseEntity<SuccessWithScheduleDataResponseDto> createSchedule(
-            @RequestBody ScheduleRequestDto dto,
+    public ResponseEntity<SuccessWithDataResponseDto<ScheduleResponseDto>> createSchedule(
+            @Valid @RequestBody ScheduleRequestDto dto,
             HttpServletRequest request
     ) {
         log.info("일정 생성 API 호출");
@@ -38,18 +37,18 @@ public class ScheduleController {
         Long httpSessionId = getHttpSessionId(request);
 
         ScheduleResponseDto scheduleResponseDto = scheduleService.creatSchedule(httpSessionId, dto.getTitle(), dto.getContents());
-        return successCreateScheduleResponse(HttpStatus.CREATED, "일정이 정상적으로 등록되었습니다.",scheduleResponseDto);
+        return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED, "일정이 정상적으로 등록되었습니다.",scheduleResponseDto);
     }
 
     //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기 --> URI 부분 이름 변경
     @GetMapping
-    public ResponseEntity<List<SchedulePageResponseDto>> getSchedules(
+    public ResponseEntity<SuccessWithDataResponseDto<List<SchedulePageResponseDto>>> getSchedules(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         log.info("일정 전체 조회 API 호출");
-
-        return new ResponseEntity<>(scheduleService.getSchedules(page,pageSize), HttpStatus.OK);
+        List<SchedulePageResponseDto> schedules = scheduleService.getSchedules(page, pageSize);
+        return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "일정 전체 조회에 성공하였습니다.",schedules);
     }
 
     //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기 --> URI 부분 이름 변경
