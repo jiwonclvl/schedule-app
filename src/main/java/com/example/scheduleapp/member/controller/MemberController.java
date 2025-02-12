@@ -35,6 +35,7 @@ public class MemberController {
         return successCreateResponse(HttpStatus.CREATED,"회원가입이 완료되었습니다.", user);
     }
 
+    /*todo: 프로필 조회는 로그인 하지 않아도 조회할 수 있도록 수정해야 한다.*/
     @GetMapping("/{userId}")
     public ResponseEntity<SuccessWithDataResponseDto> findUser(@PathVariable Long userId) {
         log.info("특정 유저 조회 API 호출");
@@ -62,6 +63,7 @@ public class MemberController {
         return successOkResponse("비밀번호가 성공적으로 변경되었습니다.");
     }
 
+    /*todo: 시간이 된다면 -> soft delete | 되지 않는다면 -> cascade*/
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<SuccessResponseDto> deleteUser(
             @PathVariable Long userId,
@@ -71,4 +73,6 @@ public class MemberController {
         memberService.deleteUser(userId, dto.getPassword());
         return successOkResponse("유저가 삭제 되었습니다.");
     }
+
+    /*todo: 로그 아웃 기능 추가*/
 }
