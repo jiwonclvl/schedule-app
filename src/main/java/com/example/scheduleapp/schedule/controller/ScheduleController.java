@@ -76,7 +76,6 @@ public class ScheduleController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "일정 성공적으로 수정되었습니다.", scheduleResponseDto);
     }
 
-    //todo: 일정 삭제 시 댓글 삭제
     @DeleteMapping("/delete/{scheduleId}")
     public ResponseEntity<SuccessResponseDto> updateSchedule(
             @PathVariable Long scheduleId,

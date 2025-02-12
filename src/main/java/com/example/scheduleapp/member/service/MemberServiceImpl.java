@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.example.scheduleapp.member.dto.response.MemberResponseDto.memberDto;
@@ -93,9 +94,11 @@ public class MemberServiceImpl{
 
     /*이메일 수정*/
     @Transactional
-    public void updateUserEmail(Long id, String password, String newEmail) {
+    public void updateUserEmail(Long loginMember, Long id, String password, String newEmail) {
         /*객체 조회*/
         Member findUser = getUserById(id);
+
+        validationUser(loginMember,findUser.getId());
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
@@ -110,9 +113,11 @@ public class MemberServiceImpl{
 
     /*비밀번호 수정*/
     @Transactional
-    public void updateUserPassword(Long id, String oldPassword, String newPassword) {
+    public void updateUserPassword(Long loginMember, Long id, String oldPassword, String newPassword) {
         /*객체 조회*/
         Member findUser = getUserById(id);
+
+        validationUser(loginMember,findUser.getId());
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(oldPassword, findUser);
@@ -129,11 +134,12 @@ public class MemberServiceImpl{
 
     }
 
-    /*todo: 유저 삭제 시 전체 삭제 구현하기*/
     @Transactional
-    public void deleteUser(Long id, String password) {
+    public void deleteUser(Long loginMember, Long id, String password) {
         /*객체 조회*/
         Member findUser = getUserById(id);
+
+        validationUser(loginMember,findUser.getId());
 
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
@@ -162,6 +168,13 @@ public class MemberServiceImpl{
         /*비밀번호 검증*/
         if(!passwordMatch) {
             throw new PasswordException(ErrorCode.UNAUTHORIZED);
+        }
+    }
+
+    private void validationUser(Long loginMember, Long id) {
+        //유저 검증
+        if (!loginMember.equals(id)) {
+            throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }
     }
 }

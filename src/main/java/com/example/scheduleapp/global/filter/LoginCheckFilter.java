@@ -45,6 +45,13 @@ public class LoginCheckFilter implements Filter {
 
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        // GET 요청에 대해서만 화이트리스트 적용
+        if (httpRequest.getMethod().equals("GET")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
         log.info("로그인 필터 로직 실행");
 
         // 요청 온 uri가 WHITELIST에 포함되어 있지 않다면 필터 적용
