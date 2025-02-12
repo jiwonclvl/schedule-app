@@ -15,6 +15,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     /*일정 고유 식별자를 통해 일정 조회*/
     Optional<Schedule> findById(Long scheduleId);
 
-    /*페이징*/
-    Page<Schedule> findAll(Pageable pageable);
+
 }

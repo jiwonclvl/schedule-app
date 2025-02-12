@@ -1,6 +1,5 @@
 package com.example.scheduleapp.global.dto;
 
-import com.example.scheduleapp.member.dto.response.MemberResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -8,24 +7,23 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 @Builder
-public class SuccessWithDataResponseDto {
+public class SuccessWithDataResponseDto <T> {
     private final Integer status;
 
-    private final MemberResponseDto data;
+    private final T data;
 
     private final String message;
 
-    private SuccessWithDataResponseDto(Integer status, MemberResponseDto data, String message) {
+    private SuccessWithDataResponseDto(Integer status, T data, String message) {
         this.status = status;
         this.data = data;
         this.message = message;
     }
 
-    /*상태 코드, 데이터, 메세지를 출력하는 경우(유저 단건 조회)*/
-    public static ResponseEntity<SuccessWithDataResponseDto> successOkWithDataResponse(HttpStatus status, String message, MemberResponseDto dto) {
+    public static <T> ResponseEntity<SuccessWithDataResponseDto<T>> successOkWithDataResponse(HttpStatus status, String message, T dto) {
         return ResponseEntity
                 .status(status)
-                .body(SuccessWithDataResponseDto.builder()
+                .body(SuccessWithDataResponseDto.<T>builder()
                         .status(status.value())
                         .data(dto)
                         .message(message)
@@ -33,11 +31,10 @@ public class SuccessWithDataResponseDto {
                 );
     }
 
-    /*상태 코드, 데이터, 메세지를 출력하는 경우(유저 생성)*/
-    public static ResponseEntity<SuccessWithDataResponseDto> successCreateResponse(HttpStatus status, String message, MemberResponseDto dto) {
+    public static <T> ResponseEntity<SuccessWithDataResponseDto<T>> successCreateResponse(HttpStatus status, String message, T dto) {
         return ResponseEntity
                 .status(status)
-                .body(SuccessWithDataResponseDto.builder()
+                .body(SuccessWithDataResponseDto.<T>builder()
                         .status(status.value())
                         .data(dto)
                         .message(message)

@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -62,14 +63,16 @@ public class ScheduleServiceImpl{
     }
 
     //todo: 일정 조회 시 날짜 출력 형식 변경하기
-    //todo: 댓글 수정 후 수정하기
     public List<SchedulePageResponseDto> getSchedules(int page, int pageSize) {
 
         //페이지 객체 생성
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("updatedAt").descending());
         Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
 
-        /*응답 static으로 변경*/
+        if (schedulePage.isEmpty()) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
+        }
+
         List<SchedulePageResponseDto> schedulePagelist = schedulePage.getContent().stream()
                 .map(schedule -> {
                     Long totalComment = commentRepository.countByScheduleId(schedule.getId());
@@ -104,29 +107,30 @@ public class ScheduleServiceImpl{
     }
 
     @Transactional
-    public ScheduleResponseDto updateSchedule(HttpSession session, Long scheduleId, String title, String contents) {
+    public ScheduleResponseDto updateSchedule(Long httpSessionId, Long scheduleId, String title, String contents) {
         Schedule schedule = findScheduleById(scheduleId);
 
         Long userId = schedule.getMember().getId();
-        Object id = session.getAttribute("id");
 
         /*로그인한 유저가 수정하려는 일정이 다른 사람의 일정인 경우*/
-        if(userId != id) {
+        if (!Objects.equals(userId, httpSessionId)) {
             throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }
 
-        //둘 다 변경 된 경우
-        if(!schedule.getTitle().equals(title) &&!schedule.getContents().equals(contents)) {
+        // 둘 다 변경된 경우 (title은 null 고려 X, contents는 null 허용)
+        if (!schedule.getTitle().equals(title) && !Objects.equals(schedule.getContents(), contents)) {
             schedule.updateTitle(title);
             schedule.updateContents(contents);
         }
-        //title만 변경된 경우
-        if(!schedule.getContents().equals(contents)){
-            schedule.updateContents(title);
+
+        // title만 변경된 경우 (null 고려 X)
+        if (!schedule.getTitle().equals(title) && Objects.equals(schedule.getContents(), contents)) {
+            schedule.updateTitle(title);
         }
-        //contents만 변경된 경우
-        if(!schedule.getContents().equals(contents)){
-            schedule.updateContents(title);
+
+        // contents만 변경된 경우 (null 고려 O)
+        if (!Objects.equals(schedule.getContents(), contents) && schedule.getTitle().equals(title)) {
+            schedule.updateContents(contents);
         }
 
         log.info("일정 수정 조회 성공");
@@ -142,9 +146,15 @@ public class ScheduleServiceImpl{
     }
 
     @Transactional
-    public void deleteSchedule(Long scheduleId) {
+    public void deleteSchedule(Long httpSessionId, Long scheduleId) {
 
         Schedule schedule = findScheduleById(scheduleId);
+
+        if (!Objects.equals(httpSessionId, schedule.getMember().getId())) {
+            throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
+        }
+
+
         scheduleRepository.delete(schedule);
 
         log.info("일정 삭제 조회 성공");
