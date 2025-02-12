@@ -3,7 +3,8 @@ package com.example.scheduleapp.comment.controller;
 import com.example.scheduleapp.comment.dto.request.CommentRequestDto;
 import com.example.scheduleapp.comment.dto.request.UpdateCommentRequestDto;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
-import com.example.scheduleapp.comment.service.CommentService;
+import com.example.scheduleapp.comment.service.CommentServiceImpl;
+import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
 
     @PostMapping("/{scheduleId}")
-    public ResponseEntity<CommentResponseDto> createComment(
+    public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> createComment(
             @PathVariable Long scheduleId,
             @RequestBody CommentRequestDto dto,
             HttpServletRequest request
@@ -31,7 +32,9 @@ public class CommentController {
         log.info("댓글 생성 API 호출");
         //세션에 담긴 값 넘겨주기 (유저의 id값이 담겨있다.)
         Long httpSessionId = getHttpSessionId(request);
-        return new ResponseEntity<>(commentService.createComment(scheduleId, httpSessionId, dto.getContent()), HttpStatus.OK);
+
+        CommentResponseDto comment = commentService.createComment(scheduleId, httpSessionId, dto.getContent());
+        return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED, "댓글이 등록 되었습니다.", comment);
     }
 
     @GetMapping

@@ -6,7 +6,6 @@ import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
-import com.example.scheduleapp.schedule.repository.ScheduleRepository;
 import com.example.scheduleapp.schedule.service.ScheduleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,18 +21,17 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl {
 
     //Service가 있어야 한다.
     private final MemberServiceImpl memberService;
     private final ScheduleServiceImpl scheduleService;
     private final CommentRepository commentRepository;
 
-    @Override
     @Transactional
     public CommentResponseDto createComment(Long scheduleId, Long httpSessionId, String content) {
-        //유저와 일정이 모두 있어야 댓글이 존재할 수 있다. (또한 유저는 일정을 선택하여 댓글 등록을 할 수 있다.)
-        Member member = memberService.getUserByIdOrElseThrow(httpSessionId);
+
+        Member member = memberService.getUserById(httpSessionId);
         Schedule schedule = scheduleService.findScheduleById(scheduleId);
 
         log.info("유저 및 일정 확인 완료");
@@ -56,7 +54,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //todo: 댓글의 날짜 출력 형식 변경하기
-    @Override
     @Transactional
     public void updateComment(Long commentId, String comment) {
         Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
@@ -68,7 +65,6 @@ public class CommentServiceImpl implements CommentService {
         log.info("댓글 수정 완료");
     }
 
-    @Override
     public List<CommentResponseDto> getComments() {
         List<CommentResponseDto> commentList = commentRepository.findAll()
                 .stream()
@@ -84,7 +80,6 @@ public class CommentServiceImpl implements CommentService {
         return commentList;
     }
 
-    @Override
     public void deleteComment(Long commentId) {
         Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
 

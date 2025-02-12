@@ -10,18 +10,14 @@ import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.schedule.entity.Schedule;
 import com.example.scheduleapp.comment.repository.CommentRepository;
 import com.example.scheduleapp.schedule.repository.ScheduleRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +39,7 @@ public class ScheduleServiceImpl{
     public ScheduleResponseDto creatSchedule(Long id, String title, String contents) {
 
         //유저가 있어야 일정이 존재할 수 있다.
-        Member member = memberService.getUserByIdOrElseThrow(id);
+        Member member = memberService.getUserById(id);
         Schedule schedule = new Schedule(title, contents);
         schedule.setMember(member);
 
