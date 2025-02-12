@@ -4,6 +4,7 @@ import com.example.scheduleapp.comment.dto.request.CommentRequestDto;
 import com.example.scheduleapp.comment.dto.request.UpdateCommentRequestDto;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.service.CommentServiceImpl;
+import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -68,10 +69,14 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+    public ResponseEntity<SuccessResponseDto> deleteComment(
+            @PathVariable Long commentId,
+            HttpServletRequest request
+    ) {
         log.info("댓글 삭제 API 호출");
-        commentService.deleteComment(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Long httpSessionId = getHttpSessionId(request);
+        commentService.deleteComment(httpSessionId, commentId);
+        return SuccessResponseDto.successOkResponse("댓글이 삭제 되었습니다.");
     }
 
     private Long getHttpSessionId(HttpServletRequest request) {

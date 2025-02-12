@@ -46,6 +46,7 @@ public class CommentServiceImpl {
         //값 저장하기
         Comment savedComment = commentRepository.save(comment);
 
+        /*todo: CommentResponseDto 중복 되는 부분 빼기*/
         log.info("댓글 생성 완료");
         return new CommentResponseDto(
                 savedComment.getId(),
@@ -94,7 +95,7 @@ public class CommentServiceImpl {
         Comment findComment = findCommentById(commentId);
 
         /*권한이 없는 경우*/
-        if (!Objects.equals(httpSessionId, commentId)) {
+        if (!Objects.equals(httpSessionId, findComment.getMember().getId())) {
             throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }
 
@@ -115,8 +116,12 @@ public class CommentServiceImpl {
         );
     }
 
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long httpSessionId,Long commentId) {
         Comment findComment = findCommentById(commentId);
+
+        if(!Objects.equals(httpSessionId, findComment.getMember().getId())) {
+            throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
+        }
 
         //댓글 삭제
         commentRepository.delete(findComment);
