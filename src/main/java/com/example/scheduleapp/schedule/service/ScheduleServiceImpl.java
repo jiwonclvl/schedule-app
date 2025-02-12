@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -64,10 +65,6 @@ public class ScheduleServiceImpl{
         //페이지 객체 생성
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("updatedAt").descending());
         Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
-
-        if (schedulePage.isEmpty()) {
-            throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
-        }
 
         List<SchedulePageResponseDto> schedulePagelist = schedulePage.getContent().stream()
                 .map(schedule -> {
