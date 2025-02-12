@@ -37,10 +37,12 @@ public class CommentController {
         return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED, "댓글이 등록 되었습니다.", comment);
     }
 
+    /*todo, 로그인 하지 않아도 볼 수 있도록 수정한다.*/
     @GetMapping
-    public ResponseEntity<List<CommentResponseDto>> getComments() {
+    public ResponseEntity<SuccessWithDataResponseDto<List<CommentResponseDto>>> getComments() {
         log.info("댓글 전체 조회 API 호출");
-        return new ResponseEntity<>(commentService.getComments(), HttpStatus.OK);
+        List<CommentResponseDto> comments = commentService.getComments();
+        return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글 전체 조회에 성공하였습니다.", comments);
     }
 
     @PatchMapping("/content/{commentId}")

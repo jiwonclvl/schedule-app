@@ -2,6 +2,8 @@ package com.example.scheduleapp.comment.service;
 
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.entity.Comment;
+import com.example.scheduleapp.global.exception.ErrorCode;
+import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.entity.Schedule;
@@ -23,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl {
 
-    //Service가 있어야 한다.
     private final MemberServiceImpl memberService;
     private final ScheduleServiceImpl scheduleService;
     private final CommentRepository commentRepository;
@@ -53,6 +54,21 @@ public class CommentServiceImpl {
         );
     }
 
+    public List<CommentResponseDto> getComments() {
+        List<CommentResponseDto> commentList = commentRepository.findAll()
+                .stream()
+                .map(CommentResponseDto::commentDto)
+                .toList();
+
+        if (commentList.isEmpty()) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
+        }
+
+        log.info("댓글 조회 완료");
+
+        return commentList;
+    }
+
     //todo: 댓글의 날짜 출력 형식 변경하기
     @Transactional
     public void updateComment(Long commentId, String comment) {
@@ -63,21 +79,6 @@ public class CommentServiceImpl {
         findComment.updateComment(comment);
 
         log.info("댓글 수정 완료");
-    }
-
-    public List<CommentResponseDto> getComments() {
-        List<CommentResponseDto> commentList = commentRepository.findAll()
-                .stream()
-                .map(CommentResponseDto::commentDto)
-                .toList();
-
-        if (commentList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다.");
-        }
-
-        log.info("댓글 조회 완료");
-
-        return commentList;
     }
 
     public void deleteComment(Long commentId) {
