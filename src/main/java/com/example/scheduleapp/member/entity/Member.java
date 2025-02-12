@@ -22,7 +22,6 @@ public class Member extends BaseDateTime {
     @Column(nullable = false)
     private String password;
 
-
     public Member() {
 
     }

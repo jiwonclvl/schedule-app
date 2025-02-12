@@ -1,6 +1,5 @@
-package com.example.scheduleapp.global;
+package com.example.scheduleapp.global.dto;
 
-import com.example.scheduleapp.global.exception.dto.ErrorResponseDto;
 import com.example.scheduleapp.member.dto.response.MemberResponseDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +14,8 @@ public class SuccessResponseDto {
 
     private final String message;
 
-    public static ResponseEntity<SuccessResponseDto> successResponse(String message) {
+    /*상태 코드와 메세지만 출력하는 경우*/
+    public static ResponseEntity<SuccessResponseDto> successOkResponse(String message) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessResponseDto.builder()

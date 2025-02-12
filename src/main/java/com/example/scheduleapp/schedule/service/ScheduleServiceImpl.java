@@ -69,6 +69,7 @@ public class ScheduleServiceImpl{
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("updatedAt").descending());
         Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
 
+        /*응답 static으로 변경*/
         List<SchedulePageResponseDto> schedulePagelist = schedulePage.getContent().stream()
                 .map(schedule -> {
                     Long totalComment = commentRepository.countByScheduleId(schedule.getId());
@@ -111,7 +112,7 @@ public class ScheduleServiceImpl{
 
         /*로그인한 유저가 수정하려는 일정이 다른 사람의 일정인 경우*/
         if(userId != id) {
-            throw new ForbiddenException(ErrorCode.FORBIDDEN);
+            throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }
 
         //둘 다 변경 된 경우
