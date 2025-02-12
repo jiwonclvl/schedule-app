@@ -35,7 +35,7 @@ public class AuthController {
         return SuccessResponseDto.successOkResponse("로그인에 성공하였습니다.");
     }
 
-    @PatchMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<SuccessResponseDto> logout(
             HttpServletRequest request
     ) {
