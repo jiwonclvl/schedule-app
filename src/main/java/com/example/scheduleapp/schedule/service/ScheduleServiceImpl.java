@@ -143,6 +143,7 @@ public class ScheduleServiceImpl{
 
         Schedule schedule = findScheduleById(scheduleId);
 
+        //유저 검증
         if (!Objects.equals(httpSessionId, schedule.getMember().getId())) {
             throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }

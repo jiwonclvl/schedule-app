@@ -71,6 +71,13 @@ public class CustomExceptionHandler {
         return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
     }
 
+    /*로그인하지 않고 기능 사용하려고 할 때*/
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public void handleUnauthorizedAccessException(UnauthorizedAccessException exception){
+        log.error("HttpStatus.FORBIDDEN 예외 발생");
+    }
+
     /*검증 데이터가 유효하지 않은 경우*/
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

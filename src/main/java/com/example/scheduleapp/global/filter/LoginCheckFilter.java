@@ -1,5 +1,10 @@
 package com.example.scheduleapp.global.filter;
 
+import com.example.scheduleapp.global.dto.ErrorResponseDto;
+import com.example.scheduleapp.global.exception.ErrorCode;
+import com.example.scheduleapp.global.exception.custom.ForbiddenException;
+import com.example.scheduleapp.global.exception.custom.UnauthorizedAccessException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,8 +15,12 @@ import org.springframework.util.PatternMatchUtils;
 
 import java.io.IOException;
 
+import static com.example.scheduleapp.global.dto.ErrorResponseDto.errorResponse;
+
 @Slf4j
 public class LoginCheckFilter implements Filter {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     // WHITELIST URI는 요청 로직에서 제외 (로그인, 로그아웃, 회원가입)
     private static final String[] WHITELIST = {
@@ -39,18 +48,31 @@ public class LoginCheckFilter implements Filter {
         log.info("로그인 필터 로직 실행");
 
         // 요청 온 uri가 WHITELIST에 포함되어 있지 않다면 필터 적용
-        if(!isWhiteList(requestURI)) {
-            //세션이 없다면 null 반환
-            //로그인 하지 않고 다른 기능을 수행하려고 할 때
-            HttpSession session = httpRequest.getSession(false);
+        try {
+            if(!isWhiteList(requestURI)) {
+                //세션이 없다면 null 반환
+                //로그인 하지 않고 다른 기능을 수행하려고 할 때
+                HttpSession session = httpRequest.getSession(false);
 
-            if(session == null || session.getAttribute((SessionConst.LOGIN_MEMBER)) == null) {
-                //todo: 현재 서버에러 추후 클라이언트 에러로 바꾸기
-                throw new RuntimeException("로그인 해주세요");
+                if(session == null || session.getAttribute((SessionConst.LOGIN_MEMBER)) == null) {
+                    throw new UnauthorizedAccessException(ErrorCode.UNAUTHORIZED_ACCESS);
+                }
             }
+
+            log.info("로그인 확인 성공");
+        } catch (UnauthorizedAccessException e) {
+
+            httpResponse.setContentType("application/json;charset=utf-8");
+            ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getErrorCode().getErrorCode().value(), e.getMessage());
+
+            String jsonResponse = objectMapper.writeValueAsString(errorResponseDto);
+
+            httpResponse.getWriter().write(jsonResponse);
+            httpResponse.getWriter().flush();
+
+            return;
         }
 
-        log.info("로그인 확인 성공");
         filterChain.doFilter(request, response);
     }
 
