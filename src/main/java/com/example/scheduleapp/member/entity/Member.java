@@ -1,8 +1,12 @@
 package com.example.scheduleapp.member.entity;
 
 import com.example.scheduleapp.global.entity.BaseDateTime;
+import com.example.scheduleapp.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -21,6 +25,9 @@ public class Member extends BaseDateTime {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final List<Schedule> schedules =  new ArrayList<>();
 
     public Member() {
 

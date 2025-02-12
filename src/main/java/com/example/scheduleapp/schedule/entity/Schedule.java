@@ -2,9 +2,13 @@ package com.example.scheduleapp.schedule.entity;
 
 import com.example.scheduleapp.global.entity.BaseDateTime;
 import com.example.scheduleapp.member.entity.Member;
+import com.example.scheduleapp.comment.entity.Comment;
 import jakarta.persistence.*;
 
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -25,8 +29,10 @@ public class Schedule extends BaseDateTime {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Schedule() {
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final List<Comment> comments = new ArrayList<>();
 
+    public Schedule() {
     }
 
     public Schedule(String title, String contents) {
@@ -34,8 +40,7 @@ public class Schedule extends BaseDateTime {
         this.contents = contents;
     }
 
-    //todo: 메서드명 변경
-    public void setMember(Member member) {
+    public void updateMember(Member member) {
         this.member = member;
     }
 

@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,7 +41,7 @@ public class ScheduleServiceImpl{
         //유저가 있어야 일정이 존재할 수 있다.
         Member member = memberService.getUserById(id);
         Schedule schedule = new Schedule(title, contents);
-        schedule.setMember(member);
+        schedule.updateMember(member);
 
         /*일정 등록*/
         Schedule saveSchedule = scheduleRepository.save(schedule);
@@ -148,7 +147,6 @@ public class ScheduleServiceImpl{
             throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }
 
-
         scheduleRepository.delete(schedule);
 
         log.info("일정 삭제 조회 성공");
@@ -161,7 +159,6 @@ public class ScheduleServiceImpl{
         if(findScheduleById.isEmpty()) {
             throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
         }
-
         return findScheduleById.get();
     }
     private String localDateTimeFormat(LocalDateTime dateTime) {
