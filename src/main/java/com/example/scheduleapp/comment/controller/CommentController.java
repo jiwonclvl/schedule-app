@@ -45,6 +45,15 @@ public class CommentController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글 전체 조회에 성공하였습니다.", comments);
     }
 
+    /*todo, 로그인 하지 않아도 볼 수 있도록 수정한다.*/
+    @GetMapping("/{commentId}")
+    public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> getComment(@PathVariable Long commentId) {
+        log.info("댓글 단건 조회 API 호출");
+
+        CommentResponseDto comment = commentService.getComment(commentId);
+        return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글 단건 조회에 성공하였습니다.", comment);
+    }
+
     @PatchMapping("/content/{commentId}")
     public ResponseEntity<Void> updateComment(
             @PathVariable Long commentId,

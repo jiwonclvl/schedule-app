@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -64,15 +65,31 @@ public class CommentServiceImpl {
             throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
         }
 
-        log.info("댓글 조회 완료");
+        log.info("댓글 전체 조회 완료");
 
         return commentList;
+    }
+
+    public CommentResponseDto getComment(Long commentId) {
+        Comment commentById = findCommentById(commentId);
+
+        log.info("댓글 단건 조회 완료");
+
+        return new CommentResponseDto(
+                commentById.getId(),
+                commentById.getMember().getId(),
+                commentById.getSchedule().getId(),
+                commentById.getContent(),
+                localDateTimeFormat(commentById.getCreatedAt()),
+                localDateTimeFormat(commentById.getUpdatedAt())
+        );
+
     }
 
     //todo: 댓글의 날짜 출력 형식 변경하기
     @Transactional
     public void updateComment(Long commentId, String comment) {
-        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
+        Comment findComment = findCommentById(commentId);
 
         //todo: 입력한 댓글이 비어있다면 기존 값 유지
         //댓글 수정
@@ -82,11 +99,19 @@ public class CommentServiceImpl {
     }
 
     public void deleteComment(Long commentId) {
-        Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
+        Comment findComment = findCommentById(commentId);
 
         //댓글 삭제
         commentRepository.delete(findComment);
         log.info("댓글 삭제 완료");
+    }
+
+    private Comment findCommentById(Long commentId) {
+        Optional<Comment> commentbyId = commentRepository.findById(commentId);
+        if (commentbyId.isEmpty()) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND);
+        }
+        return commentbyId.get();
     }
 
     private String localDateTimeFormat(LocalDateTime dateTime) {
