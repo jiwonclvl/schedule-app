@@ -107,14 +107,13 @@ public class ScheduleServiceImpl{
     }
 
     @Transactional
-    public ScheduleResponseDto updateSchedule(HttpSession session, Long scheduleId, String title, String contents) {
+    public ScheduleResponseDto updateSchedule(Long httpSessionId, Long scheduleId, String title, String contents) {
         Schedule schedule = findScheduleById(scheduleId);
 
         Long userId = schedule.getMember().getId();
-        Object id = session.getAttribute("id");
 
         /*로그인한 유저가 수정하려는 일정이 다른 사람의 일정인 경우*/
-        if (userId != id) {
+        if (!Objects.equals(userId, httpSessionId)) {
             throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
         }
 
@@ -147,9 +146,15 @@ public class ScheduleServiceImpl{
     }
 
     @Transactional
-    public void deleteSchedule(Long scheduleId) {
+    public void deleteSchedule(Long httpSessionId, Long scheduleId) {
 
         Schedule schedule = findScheduleById(scheduleId);
+
+        if (!Objects.equals(httpSessionId, schedule.getMember().getId())) {
+            throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
+        }
+
+
         scheduleRepository.delete(schedule);
 
         log.info("일정 삭제 조회 성공");

@@ -1,5 +1,6 @@
 package com.example.scheduleapp.schedule.controller;
 
+import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import com.example.scheduleapp.schedule.dto.request.ScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.request.UpdateScheduleRequestDto;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.example.scheduleapp.global.dto.SuccessResponseDto.successOkResponse;
 
 
 @Slf4j
@@ -67,20 +70,26 @@ public class ScheduleController {
             HttpServletRequest request
     ) {
         log.info("일정 수정 API 호출");
-        HttpSession session = request.getSession();
-        ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(session, scheduleId, dto.getTitle(), dto.getContents());
+
+        /*session으로 유저 정보 가져오기*/
+        Long httpSessionId = getHttpSessionId(request);
+        ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(httpSessionId, scheduleId, dto.getTitle(), dto.getContents());
+
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "일정 성공적으로 수정되었습니다.", scheduleResponseDto);
     }
 
     //todo: 일정 삭제 시 댓글 삭제
     @DeleteMapping("/delete/{scheduleId}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(
-            @PathVariable Long scheduleId
+    public ResponseEntity<SuccessResponseDto> updateSchedule(
+            @PathVariable Long scheduleId,
+            HttpServletRequest request
     ) {
         log.info("일정 삭제 API 호출");
 
-        scheduleService.deleteSchedule(scheduleId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        /*session으로 유저 정보 가져오기*/
+        Long httpSessionId = getHttpSessionId(request);
+        scheduleService.deleteSchedule(httpSessionId, scheduleId);
+        return successOkResponse("일정이 정상적으로 삭제되었습니다.");
     }
 
     private Long getHttpSessionId(HttpServletRequest request) {
