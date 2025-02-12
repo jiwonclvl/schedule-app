@@ -15,14 +15,12 @@ public class Schedule extends BaseDateTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(nullable = false)
     private String title;
 
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     //외래키 지정
     @JoinColumn(name = "member_id")
     private Member member;

@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import static com.example.scheduleapp.global.dto.SuccessResponseDto.successOkResponse;
 import static com.example.scheduleapp.global.dto.SuccessWithDataResponseDto.*;
+
 @Slf4j
 @RestController
 @RequestMapping("/members")

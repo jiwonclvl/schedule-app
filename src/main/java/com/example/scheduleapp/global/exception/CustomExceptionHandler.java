@@ -1,9 +1,6 @@
 package com.example.scheduleapp.global.exception;
 
-import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
-import com.example.scheduleapp.global.exception.custom.ForbiddenException;
-import com.example.scheduleapp.global.exception.custom.PasswordException;
-import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
+import com.example.scheduleapp.global.exception.custom.*;
 import com.example.scheduleapp.global.exception.dto.ErrorResponseDto;
 import com.example.scheduleapp.global.exception.dto.ValidationErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -58,11 +55,27 @@ public class CustomExceptionHandler {
         return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
     }
 
+    /*이메일이 기존과 동일한 경우*/
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EmailUnchangedException.class)
+    public ResponseEntity<ErrorResponseDto> handleEmailException(EmailUnchangedException exception){
+        log.error("HttpStatus.BAD_REQUEST email 예외 발생");
+        return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
+    }
+
+    /*비밀번호가 기존과 동일한 경우*/
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PasswordUnchangedException.class)
+    public ResponseEntity<ErrorResponseDto> handlePasswordException(PasswordUnchangedException exception){
+        log.error("HttpStatus.BAD_REQUEST password 예외 발생");
+        return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
+    }
+
     /*검증 데이터가 유효하지 않은 경우*/
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResponseDto> handleValidationException(MethodArgumentNotValidException exception){
-        log.error("HttpStatus.BAB_REQUEST 예외 발생");
+        log.error("HttpStatus.BAB_REQUEST  예외 발생");
 
         /*검증 처리가 모두 유효하지 않은 경우*/
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();

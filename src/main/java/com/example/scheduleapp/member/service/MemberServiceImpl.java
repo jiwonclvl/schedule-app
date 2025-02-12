@@ -2,12 +2,11 @@ package com.example.scheduleapp.member.service;
 
 import com.example.scheduleapp.global.config.PasswordEncoder;
 import com.example.scheduleapp.global.exception.ErrorCode;
-import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
-import com.example.scheduleapp.global.exception.custom.PasswordException;
-import com.example.scheduleapp.global.exception.custom.SignUpFailedException;
+import com.example.scheduleapp.global.exception.custom.*;
 import com.example.scheduleapp.member.dto.response.MemberResponseDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.repository.MemberRepository;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -102,15 +101,12 @@ public class MemberServiceImpl{
         /*비밀번호 처리 메서드 호출*/
         validationPassword(password, findUser);
 
-        /*입력한 이메일이 기존 이메일과 동일하지 않은 경우*/
-        if(!findUser.getEmail().equals(newEmail)) {
-            findUser.updateEmail(newEmail);
+        /*입력한 이메일이 기존 이메일과 동일한 경우*/
+        if(findUser.getEmail().equals(newEmail)) {
+            throw new EmailUnchangedException(ErrorCode.UNCHANGED_EMAIL);
         }
 
-        /*입력한 이메일이 기존 이메일과 동일
-        예외 커스텀 하기 return "기존 이메일과 동일합니다.";
-        */
-
+        findUser.updateEmail(newEmail);
     }
 
     /*비밀번호 수정*/
@@ -122,16 +118,15 @@ public class MemberServiceImpl{
         /*비밀번호 처리 메서드 호출*/
         validationPassword(oldPassword, findUser);
 
-        /*입력한 비밀번호가 기존 비밀번호와 동일하지 않은 경우*/
-        if(!findUser.getPassword().equals(newPassword)) {
-            //비밀번호 암호화
-            String encodePassword = passwordEncoder.encode(newPassword);
-            findUser.updatePassword(encodePassword);
+        /*입력한 비밀번호가 기존 비밀번호와 동일한 경우*/
+        if(oldPassword.equals(newPassword)) {
+            throw new PasswordUnchangedException(ErrorCode.UNCHANGED_PASSWORD);
         }
 
-        /*입력한 이메일이 기존 이메일과 동일
-        예외 처리 커스텀 하기 -> return "기존 비밀번호와 동일합니다.";
-        * */
+        //비밀번호 저장
+        /*비밀번호 암호화*/
+        String encodePassword = passwordEncoder.encode(newPassword);
+        findUser.updatePassword(encodePassword);
 
     }
 
