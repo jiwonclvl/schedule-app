@@ -58,6 +58,7 @@ public class CommentServiceImpl {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<CommentResponseDto> getComments() {
         List<CommentResponseDto> commentList = commentRepository.findAll()
                 .stream()
@@ -73,6 +74,7 @@ public class CommentServiceImpl {
         return commentList;
     }
 
+    @Transactional(readOnly = true)
     public CommentResponseDto getComment(Long commentId) {
         Comment commentById = findCommentById(commentId);
 

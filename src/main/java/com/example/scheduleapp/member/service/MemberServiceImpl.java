@@ -54,6 +54,7 @@ public class MemberServiceImpl{
     }
 
     /*유저 조회*/
+    @Transactional(readOnly = true)
     public MemberResponseDto findUserById(Long id) {
 
         /*객체 조회*/
