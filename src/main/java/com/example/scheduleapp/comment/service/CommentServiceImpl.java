@@ -4,6 +4,7 @@ import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.entity.Comment;
 import com.example.scheduleapp.global.exception.ErrorCode;
 import com.example.scheduleapp.global.exception.custom.EntityNotFoundException;
+import com.example.scheduleapp.global.exception.custom.ForbiddenException;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import com.example.scheduleapp.schedule.entity.Schedule;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -88,14 +90,29 @@ public class CommentServiceImpl {
 
     //todo: 댓글의 날짜 출력 형식 변경하기
     @Transactional
-    public void updateComment(Long commentId, String comment) {
+    public CommentResponseDto updateComment(Long httpSessionId, Long commentId, String comment) {
         Comment findComment = findCommentById(commentId);
 
+        /*권한이 없는 경우*/
+        if (!Objects.equals(httpSessionId, commentId)) {
+            throw new ForbiddenException(ErrorCode.CANNOT_UPDATE_OTHERS_DATA);
+        }
+
         //todo: 입력한 댓글이 비어있다면 기존 값 유지
-        //댓글 수정
-        findComment.updateComment(comment);
+        if (!findComment.getContent().equals(comment)) {
+            findComment.updateComment(comment);
+        }
 
         log.info("댓글 수정 완료");
+
+        return new CommentResponseDto(
+                findComment.getId(),
+                findComment.getMember().getId(),
+                findComment.getSchedule().getId(),
+                findComment.getContent(),
+                localDateTimeFormat(findComment.getCreatedAt()),
+                localDateTimeFormat(findComment.getUpdatedAt())
+        );
     }
 
     public void deleteComment(Long commentId) {

@@ -55,13 +55,16 @@ public class CommentController {
     }
 
     @PatchMapping("/content/{commentId}")
-    public ResponseEntity<Void> updateComment(
+    public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> updateComment(
             @PathVariable Long commentId,
-            @RequestBody UpdateCommentRequestDto dto
+            @RequestBody UpdateCommentRequestDto dto,
+            HttpServletRequest request
     ) {
         log.info("댓글 수정 API 호출");
-        commentService.updateComment(commentId, dto.getContent());
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        Long httpSessionId = getHttpSessionId(request);
+        CommentResponseDto commentResponseDto = commentService.updateComment(httpSessionId, commentId, dto.getContent());
+        return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글이 수정 되었습니다.", commentResponseDto);
     }
 
     @DeleteMapping("/delete/{commentId}")
