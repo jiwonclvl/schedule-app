@@ -1,6 +1,8 @@
 package com.example.scheduleapp.member.controller;
 
+import com.example.scheduleapp.global.filter.SessionConst;
 import com.example.scheduleapp.member.dto.request.LoginRequestDto;
+import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -29,10 +31,10 @@ public class LoginController {
             HttpServletRequest request
     ) {
         log.info("로그인 API 호출");
-        Long id = memberService.findUserByEmailAndPassword(dto.getEmail(), dto.getPassword());
+        Member loginMember = memberService.findUserByEmailAndPassword(dto.getEmail(), dto.getPassword());
 
         /*세션에 값 저장*/
-        request.getSession().setAttribute("id",id);
+        request.getSession().setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
