@@ -23,6 +23,16 @@ import java.util.List;
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
+    /*로그인 이메일 불일치 예외처리*/
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(NoSuchEmailException.class)
+    public ResponseEntity<ErrorResponseDto> handleNoSuchEmailException(NoSuchEmailException exception) {
+        log.error("HttpStatus.UNAUTHORIZED 예외 발생");
+
+        ErrorCode errorCode = exception.getErrorCode();
+        return ErrorResponseDto.errorResponse(errorCode.getErrorCode(), exception.getMessage());
+    }
+
     /*로그인 기능 예외처리*/
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(MismatchedPasswordException.class)
