@@ -19,6 +19,7 @@ public class CommentResponseDto {
 
     private final LocalDateTime updatedAt;
 
+
     public CommentResponseDto(Long id, Long memberId, Long scheduleId, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.memberId = memberId;
