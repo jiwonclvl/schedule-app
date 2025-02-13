@@ -14,14 +14,11 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 import static com.example.scheduleapp.global.dto.SuccessResponseDto.successOkResponse;
-
 
 @Slf4j
 @RestController
@@ -43,18 +40,16 @@ public class ScheduleController {
         return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED, "일정이 정상적으로 등록되었습니다.",scheduleResponseDto);
     }
 
-    //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기 --> URI 부분 이름 변경
     @GetMapping
-    public ResponseEntity<SuccessWithDataResponseDto<List<SchedulePageResponseDto>>> getSchedules(
+    public ResponseEntity<SuccessWithDataResponseDto<Page<SchedulePageResponseDto>>> getSchedules(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         log.info("일정 전체 조회 API 호출");
-        List<SchedulePageResponseDto> schedules = scheduleService.getSchedules(page, pageSize);
+        Page<SchedulePageResponseDto> schedules = scheduleService.getSchedules(page, pageSize);
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "일정 전체 조회에 성공하였습니다.",schedules);
     }
 
-    //todo: URI 이름 정해서 로그인을 하지 않아도 일정을 볼 수 있도록 수정하기 --> URI 부분 이름 변경
     @GetMapping("/{scheduleId}")
     public ResponseEntity<SuccessWithDataResponseDto<ScheduleResponseDto>> getSchedule(@PathVariable Long scheduleId) {
         log.info("일정 단건 조회 API 호출");
@@ -63,7 +58,7 @@ public class ScheduleController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK,"일정 단건 조회에 성공하였습니다.", schedule);
     }
 
-    @PatchMapping("/{scheduleId}")
+    @PatchMapping("/{scheduleId}/update")
     public ResponseEntity<SuccessWithDataResponseDto<ScheduleResponseDto>> updateSchedule(
             @PathVariable Long scheduleId,
             @Valid @RequestBody UpdateScheduleRequestDto dto,
@@ -76,7 +71,7 @@ public class ScheduleController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "일정 성공적으로 수정되었습니다.", scheduleResponseDto);
     }
 
-    @DeleteMapping("/delete/{scheduleId}")
+    @DeleteMapping("/{scheduleId}/delete")
     public ResponseEntity<SuccessResponseDto> updateSchedule(
             @PathVariable Long scheduleId,
             HttpServletRequest request
@@ -92,6 +87,4 @@ public class ScheduleController {
         Member loginMember = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         return loginMember.getId();
     }
-
-
 }

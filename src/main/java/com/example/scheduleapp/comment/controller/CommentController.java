@@ -38,7 +38,6 @@ public class CommentController {
         return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED, "댓글이 등록 되었습니다.", comment);
     }
 
-    /*todo, 로그인 하지 않아도 볼 수 있도록 수정한다.*/
     @GetMapping
     public ResponseEntity<SuccessWithDataResponseDto<List<CommentResponseDto>>> getComments() {
         log.info("댓글 전체 조회 API 호출");
@@ -46,7 +45,6 @@ public class CommentController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글 전체 조회에 성공하였습니다.", comments);
     }
 
-    /*todo, 로그인 하지 않아도 볼 수 있도록 수정한다.*/
     @GetMapping("/{commentId}")
     public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> getComment(@PathVariable Long commentId) {
         log.info("댓글 단건 조회 API 호출");
@@ -55,7 +53,7 @@ public class CommentController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글 단건 조회에 성공하였습니다.", comment);
     }
 
-    @PatchMapping("/content/{commentId}")
+    @PatchMapping("/{commentId}/update")
     public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> updateComment(
             @PathVariable Long commentId,
             @RequestBody UpdateCommentRequestDto dto,
@@ -67,7 +65,7 @@ public class CommentController {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "댓글이 수정 되었습니다.", commentResponseDto);
     }
 
-    @DeleteMapping("/delete/{commentId}")
+    @DeleteMapping("/{commentId}/delete")
     public ResponseEntity<SuccessResponseDto> deleteComment(
             @PathVariable Long commentId,
             HttpServletRequest request

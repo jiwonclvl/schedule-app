@@ -3,6 +3,8 @@ package com.example.scheduleapp.comment.dto.response;
 import com.example.scheduleapp.comment.entity.Comment;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class CommentResponseDto {
     private final Long id;
@@ -13,11 +15,11 @@ public class CommentResponseDto {
 
     private final String content;
 
-    private final String createdAt;
+    private final LocalDateTime createdAt;
 
-    private final String updatedAt;
+    private final LocalDateTime updatedAt;
 
-    public CommentResponseDto(Long id, Long memberId, Long scheduleId, String content, String createdAt, String updatedAt) {
+    public CommentResponseDto(Long id, Long memberId, Long scheduleId, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.memberId = memberId;
         this.scheduleId = scheduleId;
@@ -32,8 +34,8 @@ public class CommentResponseDto {
                 comment.getMember().getId(),
                 comment.getSchedule().getId(),
                 comment.getContent(),
-                comment.getCreatedAt().toString(),
-                comment.getUpdatedAt().toString()
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
         );
     }
 }

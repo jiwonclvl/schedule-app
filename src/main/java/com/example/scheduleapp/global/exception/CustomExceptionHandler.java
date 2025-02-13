@@ -20,8 +20,8 @@ public class CustomExceptionHandler {
 
     /*로그인 기능 예외처리*/
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(PasswordException.class)
-    public ResponseEntity<ErrorResponseDto> handlePasswordException(PasswordException exception){
+    @ExceptionHandler(MismatchedPasswordException.class)
+    public ResponseEntity<ErrorResponseDto> handlePasswordException(MismatchedPasswordException exception){
 
         log.error("HttpStatus.UNAUTHORIZED 예외 발생");
 

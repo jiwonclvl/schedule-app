@@ -51,4 +51,5 @@ public class Schedule extends BaseDateTime {
     public void updateContents(String contents) {
         this.contents = contents;
     }
+
 }

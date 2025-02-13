@@ -34,6 +34,7 @@ public class MemberController {
             @Validated @RequestBody MemberRequestDto dto
     ) {
         log.info("회원가입 API 호출");
+
         MemberResponseDto user = memberService.createUser(dto.getUsername(), dto.getEmail(), dto.getPassword());
         return SuccessWithDataResponseDto.successCreateResponse(HttpStatus.CREATED,"회원가입이 완료되었습니다.", user);
     }
@@ -41,7 +42,7 @@ public class MemberController {
     @GetMapping("/{userId}")
     public ResponseEntity<SuccessWithDataResponseDto<MemberResponseDto>> findUser(@PathVariable Long userId) {
         log.info("특정 유저 조회 API 호출");
-        MemberResponseDto userById = memberService.findUserById(userId);
+        MemberResponseDto userById = memberService.getUserById(userId);
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "유저 조회에 성공하였습니다.",userById);
     }
 
@@ -69,7 +70,6 @@ public class MemberController {
         return successOkResponse("비밀번호가 성공적으로 변경되었습니다.");
     }
 
-    /*todo: 시간이 된다면 -> soft delete | 되지 않는다면 -> cascade*/
     @DeleteMapping("/{userId}/delete")
     public ResponseEntity<SuccessResponseDto> deleteUser(
             @PathVariable Long userId,
