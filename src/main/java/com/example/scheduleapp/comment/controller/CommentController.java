@@ -4,6 +4,7 @@ import com.example.scheduleapp.comment.dto.request.CommentRequestDto;
 import com.example.scheduleapp.comment.dto.request.UpdateCommentRequestDto;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.service.CommentServiceImpl;
+import com.example.scheduleapp.global.docs.CommentControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import com.example.scheduleapp.global.filter.SessionConst;
@@ -22,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/schedules/comments")
 @RequiredArgsConstructor
-public class CommentController {
+public class CommentController implements CommentControllerDocs {
 
     private final CommentServiceImpl commentService;
 

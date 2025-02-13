@@ -1,5 +1,6 @@
 package com.example.scheduleapp.member.controller;
 
+import com.example.scheduleapp.global.docs.AuthControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.exception.ErrorCode;
 import com.example.scheduleapp.global.exception.custom.NotLoggedInException;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
     private final MemberServiceImpl memberService;
 

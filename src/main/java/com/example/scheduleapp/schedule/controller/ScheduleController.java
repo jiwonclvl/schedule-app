@@ -1,5 +1,6 @@
 package com.example.scheduleapp.schedule.controller;
 
+import com.example.scheduleapp.global.docs.ScheduleControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import com.example.scheduleapp.global.filter.SessionConst;
@@ -24,7 +25,7 @@ import static com.example.scheduleapp.global.dto.SuccessResponseDto.successOkRes
 @RestController
 @RequestMapping("/schedules")
 @RequiredArgsConstructor
-public class ScheduleController {
+public class ScheduleController implements ScheduleControllerDocs {
 
     private final ScheduleServiceImpl scheduleService;
 

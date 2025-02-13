@@ -1,6 +1,7 @@
 package com.example.scheduleapp.member.controller;
 
 
+import com.example.scheduleapp.global.docs.MemberControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
 import com.example.scheduleapp.global.filter.SessionConst;
@@ -25,7 +26,7 @@ import static com.example.scheduleapp.global.dto.SuccessResponseDto.successOkRes
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberController implements MemberControllerDocs {
 
     private final MemberServiceImpl memberService;
 
