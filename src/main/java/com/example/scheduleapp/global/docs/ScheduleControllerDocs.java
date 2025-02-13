@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.Parameter;
 
-@Tag(name = "일정 CRUD를 관리", description = "사용자 일정의 등록, 조회, 수정, 삭제를 관리하는 API입니다.")
+@Tag(name = "일정 CRUD 관리", description = "사용자 일정의 등록, 조회, 수정, 삭제를 관리하는 API입니다.")
 public interface ScheduleControllerDocs {
     @Operation(
             summary = "일정 생성",

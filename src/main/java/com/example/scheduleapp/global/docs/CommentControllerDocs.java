@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@Tag(name = "댓글 CRUD를 관리", description = "일정 댓글의 등록, 조회, 수정, 삭제를 관리하는 API입니다.")
+@Tag(name = "댓글 CRUD 관리", description = "일정 댓글의 등록, 조회, 수정, 삭제를 관리하는 API입니다.")
 public interface CommentControllerDocs {
     @Operation(
             summary = "댓글 생성",
