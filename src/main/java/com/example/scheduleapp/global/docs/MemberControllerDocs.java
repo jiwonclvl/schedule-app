@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "사용자 CRUD를 관리", description = "사용자의 회원가입 및 정보 수정, 삭제를 관리하는 API입니다.")
+@Tag(name = "사용자 CRUD 관리", description = "사용자의 회원가입 및 정보 수정, 삭제를 관리하는 API입니다.")
 public interface MemberControllerDocs {
     @Operation(summary = "회원 가입", description = "유저명, 이메일, 비밀번호를 입력 받아 사용자를 등록합니다.")
     ResponseEntity<SuccessWithDataResponseDto<MemberResponseDto>> createUser(
