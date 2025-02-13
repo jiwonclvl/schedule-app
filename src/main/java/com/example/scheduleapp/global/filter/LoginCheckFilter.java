@@ -25,8 +25,7 @@ public class LoginCheckFilter implements Filter {
             "/",
             "/login",
             "/logout",
-            "/members/signup",
-            "/schedules/comments",
+            "/members/signup"
     };
 
     @Override
@@ -69,8 +68,6 @@ public class LoginCheckFilter implements Filter {
             String jsonResponse = objectMapper.writeValueAsString(errorResponseDto);
 
             httpResponse.getWriter().write(jsonResponse);
-            httpResponse.getWriter().flush();
-
             return;
         }
 

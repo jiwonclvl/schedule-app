@@ -1,7 +1,6 @@
 package com.example.scheduleapp.global.docs;
 
 import com.example.scheduleapp.comment.dto.request.CommentRequestDto;
-import com.example.scheduleapp.comment.dto.request.UpdateCommentRequestDto;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -49,7 +47,7 @@ public interface CommentControllerDocs {
     )
     ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> updateComment(
             @Parameter(description = "수정할 댓글 ID", required = true) @PathVariable Long commentId,
-            @Parameter(description = "수정할 댓글 내용") @RequestBody UpdateCommentRequestDto dto,
+            @Parameter(description = "수정할 댓글 내용") @RequestBody CommentRequestDto dto,
             @Parameter(description = "요청을 보낸 사용자 세션 정보") HttpServletRequest request
     );
 

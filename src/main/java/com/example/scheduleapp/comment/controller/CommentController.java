@@ -1,7 +1,6 @@
 package com.example.scheduleapp.comment.controller;
 
 import com.example.scheduleapp.comment.dto.request.CommentRequestDto;
-import com.example.scheduleapp.comment.dto.request.UpdateCommentRequestDto;
 import com.example.scheduleapp.comment.dto.response.CommentResponseDto;
 import com.example.scheduleapp.comment.service.CommentServiceImpl;
 import com.example.scheduleapp.global.docs.CommentControllerDocs;
@@ -57,7 +56,7 @@ public class CommentController implements CommentControllerDocs {
     @PatchMapping("/{commentId}/update")
     public ResponseEntity<SuccessWithDataResponseDto<CommentResponseDto>> updateComment(
             @PathVariable Long commentId,
-            @RequestBody UpdateCommentRequestDto dto,
+            @RequestBody CommentRequestDto dto,
             HttpServletRequest request
     ) {
         log.info("댓글 수정 API 호출");
@@ -82,3 +81,4 @@ public class CommentController implements CommentControllerDocs {
         return loginMember.getId();
     }
 }
+

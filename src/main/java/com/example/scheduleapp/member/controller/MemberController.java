@@ -14,6 +14,7 @@ import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.service.MemberServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ public class MemberController implements MemberControllerDocs {
 
     @PostMapping("/signup")
     public ResponseEntity<SuccessWithDataResponseDto<MemberResponseDto>> createUser(
-            @Validated @RequestBody MemberRequestDto dto
+            @Valid @RequestBody MemberRequestDto dto
     ) {
         log.info("회원가입 API 호출");
 
@@ -50,7 +51,7 @@ public class MemberController implements MemberControllerDocs {
     @PatchMapping("/{userId}/email")
     public ResponseEntity<SuccessResponseDto> updateUserEmail(
             @PathVariable Long userId,
-            @Validated @RequestBody UpdateMemberEmailRequestDto dto,
+            @Valid @RequestBody UpdateMemberEmailRequestDto dto,
             HttpServletRequest request
     ) {
         log.info("유저 이메일 수정 API 호출");
@@ -62,7 +63,7 @@ public class MemberController implements MemberControllerDocs {
     @PatchMapping("/{userId}/password")
     public ResponseEntity<SuccessResponseDto> updateUserPassword(
             @PathVariable Long userId,
-            @Validated @RequestBody UpdateMemberPasswordRequestDto dto,
+            @Valid @RequestBody UpdateMemberPasswordRequestDto dto,
             HttpServletRequest request
 
     ) {
@@ -74,7 +75,7 @@ public class MemberController implements MemberControllerDocs {
     @DeleteMapping("/{userId}/delete")
     public ResponseEntity<SuccessResponseDto> deleteUser(
             @PathVariable Long userId,
-            @Validated @RequestBody DeleteMemberRequestDto dto,
+            @RequestBody DeleteMemberRequestDto dto,
             HttpServletRequest request
 
     ) {
