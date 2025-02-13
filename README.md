@@ -23,6 +23,8 @@
 
 ## API 명세서
 ### 노션을 통해 설계한 명세서
+https://www.notion.so/API-1186fae2cbba80d5b966d9e70df6e45a?pvs=4
+
 <details><summary> 📋 사용자 로그인 및 로그아웃 관리 📋 
 </summary>
 
