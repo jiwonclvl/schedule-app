@@ -73,7 +73,7 @@ public class ScheduleController implements ScheduleControllerDocs {
     }
 
     @DeleteMapping("/{scheduleId}/delete")
-    public ResponseEntity<SuccessResponseDto> updateSchedule(
+    public ResponseEntity<SuccessResponseDto> deleteSchedule(
             @PathVariable Long scheduleId,
             HttpServletRequest request
     ) {
