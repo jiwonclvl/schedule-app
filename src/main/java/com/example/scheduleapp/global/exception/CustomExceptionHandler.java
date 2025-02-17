@@ -1,12 +1,8 @@
 package com.example.scheduleapp.global.exception;
 
-import com.example.scheduleapp.comment.controller.CommentController;
 import com.example.scheduleapp.global.exception.custom.*;
 import com.example.scheduleapp.global.dto.ErrorResponseDto;
 import com.example.scheduleapp.global.dto.ValidationErrorResponseDto;
-import com.example.scheduleapp.member.controller.AuthController;
-import com.example.scheduleapp.member.controller.MemberController;
-import com.example.scheduleapp.schedule.controller.ScheduleController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +10,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 
@@ -89,8 +84,9 @@ public class CustomExceptionHandler {
     /*로그인하지 않고 기능 사용하려고 할 때*/
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(UnauthorizedAccessException.class)
-    public void handleUnauthorizedAccessException(UnauthorizedAccessException exception){
+    public ResponseEntity<ErrorResponseDto> handleUnauthorizedAccessException(UnauthorizedAccessException exception){
         log.error("HttpStatus.FORBIDDEN 예외 발생");
+        return ErrorResponseDto.errorResponse(exception.getErrorCode().getErrorCode(), exception.getMessage());
     }
 
     /*로그인하지 않고 로그아웃을 하려고 할 때*/

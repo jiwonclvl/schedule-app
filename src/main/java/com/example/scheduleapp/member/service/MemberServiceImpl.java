@@ -45,6 +45,10 @@ public class MemberServiceImpl{
         String encodePassword = passwordEncoder.encode(password);
         Member user = new Member(username, email, encodePassword);
 
+        /*
+        * JPA에서는 영속성 컨텍스트에서 데이터를 다루기 때문에 아래와 같이 하는 것은 궅이 JPA스럽지는 않다.
+        *  하지만 협업시 유지 보수를 위해서는 아래와 같이 하는 것이 좋다.
+        * */
         Member savedUser = memberRepository.save(user);
 
         log.info("유저 저장 성공");

@@ -84,7 +84,7 @@ public class ScheduleServiceImpl {
         /**
          * 서비스 사용 시 순환 참조 문제 발생! 시간 부족으로 해결하지 못함
          * 따라서 임의로 레포지토리에서 값을 가져오도록 하였다.
-         * 추후 찾아보고 수정할 예정
+         * 추후 찾아보고 수정할 예정 --> 서비스 하나 만들어서 따로 관리 (챌린지 반 강의 참고하기)
          */
         return schedulePage.map(schedule -> new SchedulePageResponseDto(
                 schedule.getMember().getUsername(),

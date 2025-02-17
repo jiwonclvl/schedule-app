@@ -6,7 +6,7 @@ import com.example.scheduleapp.comment.service.CommentServiceImpl;
 import com.example.scheduleapp.global.docs.CommentControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
-import com.example.scheduleapp.global.filter.SessionConst;
+import com.example.scheduleapp.global.interceptor.SessionConst;
 import com.example.scheduleapp.member.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

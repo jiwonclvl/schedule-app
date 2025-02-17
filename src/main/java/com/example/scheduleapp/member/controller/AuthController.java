@@ -1,10 +1,11 @@
 package com.example.scheduleapp.member.controller;
 
+import com.example.scheduleapp.global.annotation.LoginRequired;
 import com.example.scheduleapp.global.docs.AuthControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.exception.ErrorCode;
 import com.example.scheduleapp.global.exception.custom.NotLoggedInException;
-import com.example.scheduleapp.global.filter.SessionConst;
+import com.example.scheduleapp.global.interceptor.SessionConst;
 import com.example.scheduleapp.member.dto.request.LoginRequestDto;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.member.service.MemberServiceImpl;

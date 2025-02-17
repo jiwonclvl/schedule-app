@@ -1,9 +1,10 @@
 package com.example.scheduleapp.schedule.controller;
 
+import com.example.scheduleapp.global.annotation.LoginRequired;
 import com.example.scheduleapp.global.docs.ScheduleControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
-import com.example.scheduleapp.global.filter.SessionConst;
+import com.example.scheduleapp.global.interceptor.SessionConst;
 import com.example.scheduleapp.member.entity.Member;
 import com.example.scheduleapp.schedule.dto.request.ScheduleRequestDto;
 import com.example.scheduleapp.schedule.dto.request.UpdateScheduleRequestDto;
@@ -29,6 +30,7 @@ public class ScheduleController implements ScheduleControllerDocs {
 
     private final ScheduleServiceImpl scheduleService;
 
+    @LoginRequired
     @PostMapping
     public ResponseEntity<SuccessWithDataResponseDto<ScheduleResponseDto>> createSchedule(
             @Valid @RequestBody ScheduleRequestDto dto,
@@ -59,6 +61,7 @@ public class ScheduleController implements ScheduleControllerDocs {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK,"일정 단건 조회에 성공하였습니다.", schedule);
     }
 
+    @LoginRequired
     @PatchMapping("/{scheduleId}/update")
     public ResponseEntity<SuccessWithDataResponseDto<ScheduleResponseDto>> updateSchedule(
             @PathVariable Long scheduleId,
@@ -72,6 +75,7 @@ public class ScheduleController implements ScheduleControllerDocs {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "일정 성공적으로 수정되었습니다.", scheduleResponseDto);
     }
 
+    @LoginRequired
     @DeleteMapping("/{scheduleId}/delete")
     public ResponseEntity<SuccessResponseDto> deleteSchedule(
             @PathVariable Long scheduleId,

@@ -1,10 +1,11 @@
 package com.example.scheduleapp.member.controller;
 
 
+import com.example.scheduleapp.global.annotation.LoginRequired;
 import com.example.scheduleapp.global.docs.MemberControllerDocs;
 import com.example.scheduleapp.global.dto.SuccessResponseDto;
 import com.example.scheduleapp.global.dto.SuccessWithDataResponseDto;
-import com.example.scheduleapp.global.filter.SessionConst;
+import com.example.scheduleapp.global.interceptor.SessionConst;
 import com.example.scheduleapp.member.dto.request.DeleteMemberRequestDto;
 import com.example.scheduleapp.member.dto.request.MemberRequestDto;
 import com.example.scheduleapp.member.dto.request.UpdateMemberEmailRequestDto;
@@ -19,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import static com.example.scheduleapp.global.dto.SuccessResponseDto.successOkResponse;
 
@@ -48,6 +48,7 @@ public class MemberController implements MemberControllerDocs {
         return SuccessWithDataResponseDto.successOkWithDataResponse(HttpStatus.OK, "유저 조회에 성공하였습니다.",userById);
     }
 
+    @LoginRequired
     @PatchMapping("/{userId}/email")
     public ResponseEntity<SuccessResponseDto> updateUserEmail(
             @PathVariable Long userId,
@@ -60,6 +61,7 @@ public class MemberController implements MemberControllerDocs {
         return successOkResponse("이메일이 성공적으로 변경되었습니다.");
     }
 
+    @LoginRequired
     @PatchMapping("/{userId}/password")
     public ResponseEntity<SuccessResponseDto> updateUserPassword(
             @PathVariable Long userId,
@@ -72,6 +74,7 @@ public class MemberController implements MemberControllerDocs {
         return successOkResponse("비밀번호가 성공적으로 변경되었습니다.");
     }
 
+    @LoginRequired
     @DeleteMapping("/{userId}/delete")
     public ResponseEntity<SuccessResponseDto> deleteUser(
             @PathVariable Long userId,
